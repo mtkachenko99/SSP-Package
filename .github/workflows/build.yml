@@ -1,0 +1,37 @@
+# Builds the distributable packages for macOS and Windows.
+# Runs only on demand (Actions → build → Run workflow) or when a tag v* is pushed.
+# NOTE: this workflow has not been run yet — expect to fix small issues on the first run.
+name: build
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+jobs:
+  macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, macos-13]   # Apple Silicon and Intel
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: software
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash packaging/macos/build_macos.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ssp-${{ matrix.os }}
+          path: software/packaging/out/*.zip
+  windows:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: software
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash packaging/windows/build_windows.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ssp-windows-x64
+          path: software/packaging/out/ssp-windows-x64.zip

@@ -1,0 +1,17 @@
+{
+  "_comment": "Calibration on the measured merocyanine MC1 monomer absorption in mecn (absolute molar extinction, 293 K; Kleine-Kleffmann et al. 2023). No PL in the dataset.",
+  "monomer_fit": {
+    "absorption_file": "processed/monomer_mecn.csv",
+    "absorption_unit": "nm",
+    "absolute_extinction": true,
+    "n_medium": 1.344,
+    "temperature_K": 293,
+    "wmin_cm": 14286,
+    "wmax_cm": 23256,
+    "start": {
+      "cutoff_cm": 100,
+      "modes": [{"omega_cm": 1150, "huang_rhys": 0.4, "gamma_cm": 30}]
+    },
+    "output_dir": "../../results/calibration_merocyanine_mecn"
+  }
+}

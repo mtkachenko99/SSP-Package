@@ -1,0 +1,76 @@
+{
+  "_comment": "Step 4 (hypothetical hybrid): a layer of C8S3-like molecules (calibrated bath, mu 11.4 D) 1 nm above a gold sphere R = 20 nm in water; the exciton energy is scanned across the dipolar plasmon -> anticrossing, coupling g, strong-coupling criteria, quenching and quantum yield.",
+  "output_dir": "results/4_hybrid_scan",
+  "configurations": [
+    {
+      "name": "shell",
+      "geometry_type": "particle_shell",
+      "geometry_params": {
+        "N": 400,
+        "gap": 1.0,
+        "dipole_mode": 0,
+        "seed": 1
+      }
+    }
+  ],
+  "exciton": {
+    "monomer_energy_cm": 18900.0,
+    "transition_dipole_D": 11.4,
+    "disorder_sigma_cm": 124.5,
+    "n_medium": 1.33,
+    "coupling": {
+      "model": "point_dipole"
+    }
+  },
+  "bath": {
+    "type": "drude_lorentz",
+    "lambda_cm": 764.0,
+    "cutoff_cm": 572.6,
+    "temperature_K": 295,
+    "modes": [
+      {
+        "omega_cm": 1258.6,
+        "huang_rhys": 0.1957,
+        "gamma_cm": 30
+      }
+    ]
+  },
+  "decay": {
+    "monomer_lifetime_ns": 0.0,
+    "nonradiative_ps": 0.0005
+  },
+  "spectrum": {
+    "wmin_cm": 14000,
+    "wmax_cm": 24000,
+    "nw": 1000,
+    "t_max_ps": 30
+  },
+  "ensemble": {
+    "min_realizations": 4,
+    "max_realizations": 4,
+    "rel_tolerance": 0.05,
+    "seed": 5
+  },
+  "dynamics": {
+    "enabled": false
+  },
+  "nanoparticle": {
+    "enabled": true,
+    "shape": "sphere",
+    "semi_axis_xy_nm": 20.0,
+    "material_file": "../materials/Au_McPeak.yml",
+    "n_medium": 1.33,
+    "l_max": 100,
+    "realizations": 4,
+    "wmin_cm": 15000,
+    "wmax_cm": 23000,
+    "nw": 240
+  },
+  "scan": {
+    "enabled": true,
+    "parameter": "exciton.monomer_energy_cm",
+    "from": 17000.0,
+    "to": 21000.0,
+    "steps": 9
+  }
+}

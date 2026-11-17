@@ -1,0 +1,81 @@
+{
+  "_comment": "Dense ordered J-aggregate shell (0.6 molecules/nm², 12 domains with in-domain alignment) on a gold sphere R = 10 nm covered by a 1 nm ligand layer (n = 1.45), in water. Correlated energetic disorder (ξ = 2 nm) and orientation jitter; core-size distribution σ_R/R = 10 %; fast solver chosen automatically for N ≈ 1000; Purcell/quantum yield per molecule and PL of the hybrid. d_perp_nm (Feibelman) is 0 here: for gold |d⊥| ≲ 0.1 nm and its sign is still debated — set [re, im] to study it. Holstein OPA (ω₀ = 1300 cm⁻¹, S = 0.5) gives the vibronic absorption band structure.",
+  "output_dir": "results/dense_ligand_shell",
+  "configurations": [
+    {
+      "name": "dense_shell",
+      "geometry_type": "particle_shell",
+      "geometry_params": {
+        "gap": 0.5,
+        "density_per_nm2": 0.6,
+        "theta_max_deg": 180.0,
+        "dipole_mode": 1,
+        "domains": 12,
+        "domain_jitter_deg": 10.0,
+        "seed": 2
+      }
+    }
+  ],
+  "exciton": {
+    "monomer_energy_cm": 18900.0,
+    "transition_dipole_D": 10.0,
+    "disorder_sigma_cm": 300.0,
+    "disorder_corr_length_nm": 2.0,
+    "orientation_jitter_deg": 5.0,
+    "position_jitter_nm": 0.05,
+    "n_medium": 1.33,
+    "coupling": {
+      "model": "extended_dipole",
+      "dipole_length_nm": 0.8
+    }
+  },
+  "bath": {
+    "type": "drude_lorentz",
+    "lambda_cm": 50.0,
+    "cutoff_cm": 120.0,
+    "temperature_K": 300.0
+  },
+  "decay": {
+    "monomer_lifetime_ns": 3.0,
+    "nonradiative_ps": 0.0005
+  },
+  "spectrum": {
+    "wmin_cm": 14000.0,
+    "wmax_cm": 24000.0,
+    "nw": 1000,
+    "t_max_ps": 50.0
+  },
+  "ensemble": {
+    "min_realizations": 4,
+    "max_realizations": 4,
+    "rel_tolerance": 0.05,
+    "seed": 3
+  },
+  "dynamics": {
+    "enabled": false
+  },
+  "nanoparticle": {
+    "enabled": true,
+    "shape": "sphere",
+    "semi_axis_xy_nm": 10.0,
+    "shell_thickness_nm": 1.0,
+    "shell_n": 1.45,
+    "d_perp_nm": 0.0,
+    "fast_l": "auto",
+    "size_sigma_rel": 0.1,
+    "size_nodes": 5,
+    "material_file": "materials/Au_McPeak.yml",
+    "n_medium": 1.33,
+    "l_max": 120,
+    "wmin_cm": 15000.0,
+    "wmax_cm": 23000.0,
+    "nw": 240
+  },
+  "holstein": {
+    "enabled": true,
+    "omega_cm": 1300.0,
+    "huang_rhys": 0.5,
+    "nu_max": 3,
+    "realizations": 4
+  }
+}

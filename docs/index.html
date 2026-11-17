@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SSP Nano — illustrated guide</title>
+<meta name="description" content="Formulas, code and an interactive map of SSP Nano: exciton spectra of molecular aggregates and plasmon–exciton hybrids.">
+<style>
+:root{--bg:#fbfbf9;--panel:#fff;--panel2:#f3f3ef;--ink:#1c1c1a;--ink2:#55544e;--line:#deddd6;--accent:#2a78d6;--accent2:#eb6834;
+--done:#0f7a52;--done-bg:#dff3ea;--partial:#8a5a00;--partial-bg:#fbecc8;--planned:#5b5a66;--planned-bg:#e8e7ee;--code:#f5f4ef;--shadow:0 1px 2px rgba(0,0,0,.06),0 6px 20px rgba(0,0,0,.05)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#161615;--panel:#1f1f1d;--panel2:#262624;--ink:#f0efec;--ink2:#b5b4aa;--line:#3a3a36;--accent:#5a9bea;--accent2:#f08a5d;
+--done:#5fd3a4;--done-bg:#143528;--partial:#f0c060;--partial-bg:#3b2f10;--planned:#b9b8c6;--planned-bg:#2e2d36;--code:#1b1b19;--shadow:none}}
+:root[data-theme=dark]{--bg:#161615;--panel:#1f1f1d;--panel2:#262624;--ink:#f0efec;--ink2:#b5b4aa;--line:#3a3a36;--accent:#5a9bea;--accent2:#f08a5d;
+--done:#5fd3a4;--done-bg:#143528;--partial:#f0c060;--partial-bg:#3b2f10;--planned:#b9b8c6;--planned-bg:#2e2d36;--code:#1b1b19;--shadow:none}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--accent)}code{font:13.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--panel2);padding:.08em .35em;border-radius:4px}
+.layout{display:grid;grid-template-columns:230px minmax(0,1fr);max-width:1320px;margin:0 auto}
+nav{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;padding:22px 14px 22px 20px;border-right:1px solid var(--line)}
+nav .brand{font-weight:700;font-size:18px;margin-bottom:2px}nav .sub{color:var(--ink2);font-size:12.5px;margin-bottom:14px}
+nav a{display:block;color:var(--ink2);text-decoration:none;padding:4px 8px;border-radius:6px;font-size:14px}nav a:hover{background:var(--panel2);color:var(--ink)}
+nav .grp{margin:12px 0 4px 8px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
+nav button{margin-top:14px;font:inherit;font-size:13px;padding:6px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;cursor:pointer}
+main{padding:28px 32px 80px;min-width:0}
+h1{font-size:38px;line-height:1.15;margin:0 0 10px;letter-spacing:-.02em}h2{font-size:26px;margin:56px 0 8px;letter-spacing:-.01em}h3{font-size:19px;margin:0}
+.tag{color:var(--ink2);font-size:18px;max-width:60ch;margin:0 0 18px}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:28px;align-items:center}
+.hero img,.shots img{width:100%;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);display:block}
+.kpis{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 14px}.kpi b{display:block;font-size:20px}.kpi span{font-size:12.5px;color:var(--ink2)}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 9px 2px 7px;border-radius:999px;white-space:nowrap}
+.badge i{font-style:normal}.badge.done{color:var(--done);background:var(--done-bg)}.badge.partial{color:var(--partial);background:var(--partial-bg)}.badge.planned{color:var(--planned);background:var(--planned-bg)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.chip{font:inherit;font-size:13.5px;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.map{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.stage{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
+.stage h4{margin:0 0 8px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);display:flex;justify-content:space-between}
+.node{display:flex;align-items:center;gap:8px;width:100%;text-align:left;font:inherit;font-size:14px;padding:7px 9px;margin:4px 0;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.node:hover,.node[aria-expanded=true]{border-color:var(--accent)}.node .dot{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700}
+.node.done .dot{background:var(--done-bg);color:var(--done)}.node.partial .dot{background:var(--partial-bg);color:var(--partial)}.node.planned .dot{background:var(--planned-bg);color:var(--planned)}
+.node.planned{border-style:dashed;color:var(--ink2)}.node[hidden]{display:none}
+.detail{margin-top:14px;background:var(--panel);border:1px solid var(--accent);border-radius:12px;padding:16px 18px;min-height:96px}
+.detail h4{margin:0 0 6px;font-size:17px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.detail dl{display:grid;grid-template-columns:110px 1fr;gap:4px 12px;margin:8px 0 0}.detail dt{color:var(--ink2);font-size:13.5px}.detail dd{margin:0}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 2px;color:var(--ink2);font-size:13.5px}.flow b{background:var(--panel2);border-radius:6px;padding:2px 8px;color:var(--ink);font-weight:600}
+.method{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:18px 0;box-shadow:var(--shadow)}
+.method header{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.lead{color:var(--ink2);margin:8px 0 6px;max-width:80ch}
+.cols{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}.math{max-width:860px}
+.eq{overflow-x:auto;padding:8px 2px;font-size:17px}math{font-family:"STIX Two Math","Cambria Math","Latin Modern Math","Noto Sans Math",serif}
+.note{font-size:14px;color:var(--ink2);margin:6px 0 0}
+figure.code{margin:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--code)}
+figure.code figcaption{font:12px ui-monospace,Menlo,Consolas,monospace;color:var(--ink2);padding:6px 12px;border-bottom:1px solid var(--line);background:var(--panel2)}
+pre{margin:0;padding:12px;overflow-x:auto;font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}pre code{background:none;padding:0;font:inherit}
+.k{color:var(--accent)}.n{color:var(--accent2)}.c{color:var(--ink2);font-style:italic}
+.widget{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px;display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:18px;align-items:center}
+.widget h5{margin:0 0 8px;font-size:14px;grid-column:1/-1}.widget label{display:grid;grid-template-columns:1fr auto;font-size:13.5px;color:var(--ink2);margin-top:8px}
+.widget label output{color:var(--ink);font-variant-numeric:tabular-nums}.widget input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+.widget canvas{width:100%;height:230px;background:var(--bg);border:1px solid var(--line);border-radius:10px}.readout{margin-top:10px;font-size:14px}.readout b{font-variant-numeric:tabular-nums}
+.shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.shots figure{margin:0}.shots figcaption{font-size:13.5px;color:var(--ink2);margin-top:6px}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0}th,td{border-bottom:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}th{color:var(--ink2);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em}
+.tablewrap{overflow-x:auto}details{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:8px 0}summary{cursor:pointer;font-weight:600}
+.tabs{display:flex;gap:6px;margin:12px 0 0}.tab{font:inherit;font-size:14px;padding:6px 14px;border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;background:var(--panel2);color:var(--ink2);cursor:pointer}
+.tab[aria-selected=true]{background:var(--panel);color:var(--ink);font-weight:600}.tabpanel{border:1px solid var(--line);border-radius:0 10px 10px 10px;background:var(--panel);padding:14px 16px}.tabpanel[hidden]{display:none}
+.road{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.road div{background:var(--panel);border:1px dashed var(--line);border-radius:10px;padding:12px 14px}.road b{display:block}
+footer{margin-top:60px;color:var(--ink2);font-size:13.5px;border-top:1px solid var(--line);padding-top:16px}
+@media (max-width:980px){.layout{grid-template-columns:1fr}nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);padding:14px 16px}nav .links{display:flex;flex-wrap:wrap;gap:2px}nav .grp{display:none}
+main{padding:20px 16px 60px}.hero,.cols,.widget,.shots,.road{grid-template-columns:1fr}.map{grid-template-columns:1fr}h1{font-size:30px}}
+@media (min-width:981px) and (max-width:1180px){.map{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav>
+  <div class="brand">SSP Nano</div><div class="sub">illustrated guide · v0.7.3</div>
+  <div class="links">
+  <a href="#top">Overview</a><a href="#map">Program map</a>
+  <div class="grp">Methods</div>
+  <a href="#m-hamiltonian">Frenkel exciton Hamiltonian</a><a href="#m-coupling">Excitonic couplings</a><a href="#m-tresp">Transition charges (TrEsp)</a><a href="#m-dispersion">Dispersive (van der Waals) site-energy shifts</a><a href="#m-disorder">Disorder and ensemble statistics</a><a href="#m-bath">Bath and line-shape function</a><a href="#m-lineshape">Cumulant absorption and fluorescence</a><a href="#m-redfield">Redfield relaxation and kinetics</a><a href="#m-modredfield">Modified Redfield theory</a><a href="#m-heom">HEOM reference</a><a href="#m-holstein">Vibronic absorption</a><a href="#m-sphere">Nanoparticle</a><a href="#m-layered">Ligand shell and Feibelman surface response</a><a href="#m-mlwa">Retardation corrections</a><a href="#m-response">Aggregate + particle</a><a href="#m-woodbury">Fast solver for large aggregates</a><a href="#m-decay">Decay near the particle</a><a href="#m-strong">Coupling strength and strong-coupling criteria</a><a href="#m-calibration">Calibration on monomer spectra</a>
+  <div class="grp">Using it</div>
+  <a href="#gallery">Interface</a><a href="#config">Configuration</a><a href="#build">Build</a><a href="#validation">Validation</a><a href="#roadmap">Roadmap</a>
+  </div>
+  <button id="theme" type="button" aria-label="Switch colour theme">◐ Theme</button>
+</nav>
+<main id="top">
+<section class="hero">
+  <div>
+    <h1>Exciton spectra of molecular aggregates and plasmon–exciton hybrids</h1>
+    <p class="tag">SSP Nano calculates absorption, fluorescence, exciton kinetics and quantum yields of J- and H-aggregates of any shape — alone or next to a metal nanoparticle — and checks itself against exact theory and experiment.</p>
+    <div class="kpis">
+      <div class="kpi"><b>15</b><span>aggregate shapes</span></div>
+      <div class="kpi"><b>61</b><span>automated tests</span></div>
+      <div class="kpi"><b>~10³</b><span>molecules near a particle</span></div>
+      <div class="kpi"><b>C++20 · Qt 6</b><span>CLI and GUI</span></div>
+    </div>
+  </div>
+  <img src="screenshots/gui_spectra_vs_experiment.png" alt="Main window of SSP Nano: predicted spectrum of a C8S3 nanotube compared with the measured spectrum, with a residuals panel">
+</section>
+
+<h2 id="map">Program map</h2>
+<p class="lead">What the program consists of, which method does each job, what it produces — and what is not there yet. Select a block to see the details; use the filter to show only one status.</p>
+<div class="flow"><b>structure</b>→<b>Hamiltonian</b>→<b>exciton states</b>→<b>line shapes + rates</b>→<b>(+ particle response)</b>→<b>spectra, kinetics, yields</b>→<b>comparison with experiment</b></div>
+<div class="chips" role="group" aria-label="Filter by status">
+  <button class="chip" data-f="all" aria-pressed="true">All <span id="c-all"></span></button>
+  <button class="chip" data-f="done" aria-pressed="false">✓ Implemented <span id="c-done"></span></button>
+  <button class="chip" data-f="partial" aria-pressed="false">◐ Partly <span id="c-partial"></span></button>
+  <button class="chip" data-f="planned" aria-pressed="false">○ Not yet <span id="c-planned"></span></button>
+</div>
+<div class="map" id="mapgrid"></div>
+<div class="detail" id="detail" aria-live="polite"><h4>Select a block</h4><p class="note">Each block shows the method, what it gives, and a link to the formulas and code.</p></div>
+
+<h2 id="methods">Methods: formulas and the code behind them</h2>
+<p class="lead">Units: energies in cm⁻¹, lengths in nm, dipoles in debye, ħ = 1. Code excerpts are abridged from the files named above each block (comments translated to English); paths are relative to <code>software/</code>.</p>
+
+<article class="method" id="m-hamiltonian">
+  <header><h3>Frenkel exciton Hamiltonian</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">Each molecule is a two-level system. In the one-exciton manifold the Hamiltonian is a real symmetric N×N matrix; its eigenvectors give the exciton states.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>H</mi><mo>=</mo><munder><mo>∑</mo><mi>n</mi></munder><mrow><mo fence="true">(</mo><msub><mi>E</mi><mn>0</mn></msub><mo>+</mo><msub><mi>δ</mi><mi>n</mi></msub><mo>+</mo><msub><mi mathvariant="normal">Δ</mi><mi>n</mi></msub><mo fence="true">)</mo></mrow><mi mathvariant="normal">∣</mi><mi>n</mi><mo stretchy="false">⟩</mo><mo stretchy="false">⟨</mo><mi>n</mi><mi mathvariant="normal">∣</mi><mo>+</mo><munder><mo>∑</mo><mrow><mi>n</mi><mo mathvariant="normal">≠</mo><mi>m</mi></mrow></munder><msub><mi>J</mi><mrow><mi>n</mi><mi>m</mi></mrow></msub><mtext> </mtext><mi mathvariant="normal">∣</mi><mi>n</mi><mo stretchy="false">⟩</mo><mo stretchy="false">⟨</mo><mi>m</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">H=\sum_n\left(E_0+\delta_n+\Delta_n\right)|n\rangle\langle n|+\sum_{n\neq m}J_{nm}\,|n\rangle\langle m|</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi mathvariant="bold-italic">μ</mi><mi>k</mi></msub><mo>=</mo><mi>μ</mi><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>c</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><mtext> </mtext><msub><mover accent="true"><mi mathvariant="bold-italic">μ</mi><mo>^</mo></mover><mi>i</mi></msub><mo separator="true">,</mo><mspace width="2em"/><msub><mi>s</mi><mi>k</mi></msub><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><msubsup><mi>c</mi><mrow><mi>i</mi><mi>k</mi></mrow><mn>4</mn></msubsup></mrow><annotation encoding="application/x-tex">\boldsymbol\mu_k=\mu\sum_i c_{ik}\,\hat{\boldsymbol\mu}_i,\qquad s_k=\sum_i c_{ik}^4</annotation></semantics></math></span></div><p class="note"><b>E₀</b> — monomer energy, <b>δ</b> — static disorder, <b>Δ</b> — dispersive shift, <b>J</b> — coupling. The participation factor <i>s</i> (inverse delocalisation length) controls exchange narrowing.</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/hamiltonian.cpp</figcaption><pre><code>ExcitonStates diagonalize(<span class="k">const</span> <span class="k">Eigen</span>::MatrixXd&amp; H, <span class="k">const</span> Aggregate&amp; agg, <span class="k">double</span> mu_D) {
+  <span class="k">Eigen</span>::SelfAdjointEigenSolver&lt;<span class="k">Eigen</span>::MatrixXd&gt; es(H);
+  ExcitonStates s;
+  s.energies = es.eigenvalues();
+  s.c = es.eigenvectors();                               <span class="c">// c(i, k): site i in state k</span>
+  <span class="k">Eigen</span>::MatrixX3d site_mu(N, <span class="n">3</span>);
+  <span class="k">for</span> (<span class="k">Eigen</span>::Index i = <span class="n">0</span>; i &lt; N; ++i) site_mu.row(i) = mu_D * agg.dipoles[i].transpose();
+  s.mu = s.c.transpose() * site_mu;                      <span class="c">// exciton transition dipoles</span>
+  s.mu2 = s.mu.rowwise().squaredNorm();
+  s.ipr = s.c.array().pow(<span class="n">4</span>).colwise().sum().transpose(); <span class="c">// participation factor s_k</span>
+  <span class="k">return</span> s;
+}</code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-coupling">
+  <header><h3>Excitonic couplings</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">Three levels of detail. The point dipole is valid when molecules are far apart; transition charges keep the shape of the transition density and stay accurate at contact distances.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msubsup><mi>J</mi><mrow><mi>n</mi><mi>m</mi></mrow><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">p</mi></mrow></msubsup><mo>=</mo><msub><mi>f</mi><mi>s</mi></msub><mtext> </mtext><mi>C</mi><mtext> </mtext><msup><mi>μ</mi><mn>2</mn></msup><mtext> </mtext><mfrac><mrow><msub><mover accent="true"><mi>μ</mi><mo>^</mo></mover><mi>n</mi></msub><mtext> ⁣</mtext><mo>⋅</mo><mtext> ⁣</mtext><msub><mover accent="true"><mi>μ</mi><mo>^</mo></mover><mi>m</mi></msub><mo>−</mo><mn>3</mn><mo stretchy="false">(</mo><msub><mover accent="true"><mi>μ</mi><mo>^</mo></mover><mi>n</mi></msub><mtext> ⁣</mtext><mo>⋅</mo><mtext> ⁣</mtext><mover accent="true"><mi>r</mi><mo>^</mo></mover><mo stretchy="false">)</mo><mo stretchy="false">(</mo><msub><mover accent="true"><mi>μ</mi><mo>^</mo></mover><mi>m</mi></msub><mtext> ⁣</mtext><mo>⋅</mo><mtext> ⁣</mtext><mover accent="true"><mi>r</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow><msup><mi>r</mi><mn>3</mn></msup></mfrac></mrow><annotation encoding="application/x-tex">J^{\mathrm{dip}}_{nm}=f_s\,C\,\mu^2\,\frac{\hat\mu_n\!\cdot\!\hat\mu_m-3(\hat\mu_n\!\cdot\!\hat r)(\hat\mu_m\!\cdot\!\hat r)}{r^3}</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>C</mi><mo>=</mo><mfrac><mn>1</mn><mrow><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub><mi>h</mi><mi>c</mi></mrow></mfrac><mo>=</mo><mn>5.034</mn><mtext> </mtext><mrow><mi mathvariant="normal">c</mi><msup><mi mathvariant="normal">m</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mtext> </mtext><mi mathvariant="normal">n</mi><msup><mi mathvariant="normal">m</mi><mn>3</mn></msup><mtext> </mtext><msup><mi mathvariant="normal">D</mi><mrow><mo>−</mo><mn>2</mn></mrow></msup></mrow></mrow><annotation encoding="application/x-tex">C=\frac{1}{4\pi\varepsilon_0 hc}=5.034\ \mathrm{cm^{-1}\,nm^{3}\,D^{-2}}</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msubsup><mi>J</mi><mrow><mi>n</mi><mi>m</mi></mrow><mrow><mi mathvariant="normal">T</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">E</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">p</mi></mrow></msubsup><mo>=</mo><msub><mi>f</mi><mi>s</mi></msub><mtext> </mtext><mi>C</mi><munder><mo>∑</mo><mrow><mi>a</mi><mo>∈</mo><mi>n</mi></mrow></munder><munder><mo>∑</mo><mrow><mi>b</mi><mo>∈</mo><mi>m</mi></mrow></munder><mfrac><mrow><msub><mi>q</mi><mi>a</mi></msub><mtext> </mtext><msub><mi>q</mi><mi>b</mi></msub></mrow><mrow><mi mathvariant="normal">∣</mi><msub><mi mathvariant="bold">r</mi><mi>a</mi></msub><mo>−</mo><msub><mi mathvariant="bold">r</mi><mi>b</mi></msub><mi mathvariant="normal">∣</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">J^{\mathrm{TrEsp}}_{nm}=f_s\,C\sum_{a\in n}\sum_{b\in m}\frac{q_a\,q_b}{|\mathbf r_a-\mathbf r_b|}</annotation></semantics></math></span></div><p class="note">The extended dipole is TrEsp with two charges ±μ/l. Charges are rescaled so that |Σqr| equals the measured transition dipole. Try the explorer below.</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/hamiltonian.cpp</figcaption><pre><code><span class="k">case</span> CouplingModel::PointDipole: {
+  <span class="k">const</span> Vec3 n = rij / r;
+  <span class="k">const</span> <span class="k">double</span> kappa = mui.dot(muj) - <span class="n">3.0</span> * mui.dot(n) * muj.dot(n);
+  <span class="k">return</span> p.screening * units::dd_cm_per_D2_nm3 * p.mu_D * p.mu_D * kappa / (r * r * r);
+}
+<span class="c">// transition charges: sum over all pairs of atomic charges of the two molecules</span>
+<span class="k">for</span> (<span class="k">std</span>::size_t a = <span class="n">0</span>; a &lt; p.charges.size(); ++a)
+  <span class="k">for</span> (<span class="k">std</span>::size_t b = <span class="n">0</span>; b &lt; p.charges.size(); ++b)
+    s += p.charges[a](<span class="n">3</span>) * p.charges[b](<span class="n">3</span>) / (pos[i][a] - pos[j][b]).norm();
+J(i, j) = J(j, i) = p.screening * units::dd_cm_per_D2_nm3 * scale * scale * s;</code></pre></figure></div>
+  </div>
+  <div class="widget-slot" data-widget="w-coupling"></div>
+</article>
+
+<article class="method" id="m-tresp">
+  <header><h3>Transition charges (TrEsp)</h3><span class="badge partial"><i>◐</i>Partly implemented</span></header>
+  <p class="lead">Charges come from a file. They can be generated from a molecular geometry with a built-in Hückel calculation, or with the PySCF helper script (TD-DFT, electrostatic-potential fit of the transition density).</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>q</mi><mi>i</mi></msub><mo>∝</mo><msubsup><mi>c</mi><mi>i</mi><mrow><mi mathvariant="normal">H</mi><mi mathvariant="normal">O</mi><mi mathvariant="normal">M</mi><mi mathvariant="normal">O</mi></mrow></msubsup><mtext> </mtext><msubsup><mi>c</mi><mi>i</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">U</mi><mi mathvariant="normal">M</mi><mi mathvariant="normal">O</mi></mrow></msubsup><mo separator="true">,</mo><mspace width="2em"/><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>q</mi><mi>i</mi></msub><mo>=</mo><mn>0</mn><mo separator="true">,</mo><mspace width="2em"/><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">∣</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>q</mi><mi>i</mi></msub><msub><mi mathvariant="bold">r</mi><mi>i</mi></msub><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">∣</mo><mo>=</mo><mi>μ</mi></mrow><annotation encoding="application/x-tex">q_i\propto c_i^{\mathrm{HOMO}}\,c_i^{\mathrm{LUMO}},\qquad \sum_i q_i=0,\qquad \Big|\sum_i q_i\mathbf r_i\Big|=\mu</annotation></semantics></math></span></div><p class="note">Status: the Hückel generator is part of the program; the TD-DFT route is a script written for one molecule and still has to become a general pipeline.</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/huckel.cpp</figcaption><pre><code><span class="c">// Hückel matrix in units of |beta|: heteroatom parameters on the diagonal, bonds off-diagonal</span>
+H(k, k) = N ? -(pyrrole ? opt.h_N_pyrrole : opt.h_N_pyridine) : <span class="n">0.0</span>;
+kk = <span class="k">std</span>::exp(-((atoms[i].r - atoms[j].r).norm() - <span class="n">0.140</span>) / <span class="n">0.0569</span>);   <span class="c">// C–C: beta depends on bond length</span>
+H(k, it-&gt;second) = -kk;
+...
+<span class="k">const</span> <span class="k">Eigen</span>::VectorXd cH = es.eigenvectors().col(R.homo), cL = es.eigenvectors().col(R.homo + <span class="n">1</span>);
+q(k) = <span class="k">std</span>::sqrt(<span class="n">2.0</span>) * cH(k) * cL(k);                                 <span class="c">// HOMO→LUMO transition charge</span></code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-dispersion">
+  <header><h3>Dispersive (van der Waals) site-energy shifts</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">In a dense aggregate each molecule is red-shifted by the polarisable molecules around it. The shift depends on the local packing, so the inner and outer walls of a nanotube absorb at different energies.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi mathvariant="normal">Δ</mi><mi>m</mi></msub><mo>=</mo><mi>Q</mi><munder><mo>∑</mo><mrow><mi>k</mi><mo mathvariant="normal">≠</mo><mi>m</mi></mrow></munder><msubsup><mi>V</mi><mrow><mi>m</mi><mi>k</mi></mrow><mn>2</mn></msubsup><mo separator="true">,</mo><mspace width="2em"/><msub><mi>V</mi><mrow><mi>m</mi><mi>k</mi></mrow></msub><mo>=</mo><munder><mo>∑</mo><mrow><mi>a</mi><mo>∈</mo><mi>m</mi></mrow></munder><munder><mo>∑</mo><mrow><mi>b</mi><mo>∈</mo><mi>k</mi></mrow></munder><mfrac><mrow><msub><mi>q</mi><mi>a</mi></msub><msub><mi>q</mi><mi>b</mi></msub></mrow><msqrt><mrow><msubsup><mi>r</mi><mrow><mi>a</mi><mi>b</mi></mrow><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>a</mi><mn>0</mn><mn>2</mn></msubsup></mrow></msqrt></mfrac></mrow><annotation encoding="application/x-tex">\Delta_m=Q\sum_{k\neq m}V_{mk}^2,\qquad V_{mk}=\sum_{a\in m}\sum_{b\in k}\frac{q_a q_b}{\sqrt{r_{ab}^2+a_0^2}}</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>Q</mi><mtext> </mtext><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">⟨</mo><munder><mo>∑</mo><mi>k</mi></munder><msubsup><mi>V</mi><mrow><mi>m</mi><mi>k</mi></mrow><mn>2</mn></msubsup><msub><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">⟩</mo><mtext>random orientations</mtext></msub><mo>=</mo><mo>−</mo><mi>F</mi><mtext> </mtext><mfrac><mrow><msup><mi>n</mi><mn>2</mn></msup><mo>−</mo><mn>1</mn></mrow><mrow><mn>2</mn><msup><mi>n</mi><mn>2</mn></msup><mo>+</mo><mn>1</mn></mrow></mfrac></mrow><annotation encoding="application/x-tex">Q\,\Big\langle\sum_k V_{mk}^2\Big\rangle_{\text{random orientations}}=-F\,\frac{n^2-1}{2n^2+1}</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>E</mi><mi>m</mi></msub><mo>=</mo><msubsup><mi>E</mi><mn>0</mn><mtext>solvent</mtext></msubsup><mo>+</mo><mi>F</mi><mtext> </mtext><mfrac><mrow><msubsup><mi>n</mi><mi>s</mi><mn>2</mn></msubsup><mo>−</mo><mn>1</mn></mrow><mrow><mn>2</mn><msubsup><mi>n</mi><mi>s</mi><mn>2</mn></msubsup><mo>+</mo><mn>1</mn></mrow></mfrac><mo>+</mo><msub><mi mathvariant="normal">Δ</mi><mi>m</mi></msub></mrow><annotation encoding="application/x-tex">E_m=E_0^{\text{solvent}}+F\,\frac{n_s^2-1}{2n_s^2+1}+\Delta_m</annotation></semantics></math></span></div><p class="note">After Megow <i>et al.</i>, PCCP 17, 6741 (2015). The softening a₀ avoids a divergence for nearly coincident charges of close neighbours. For C8S3 this term supplies almost the whole J-band shift.</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/hamiltonian.cpp</figcaption><pre><code><span class="c">// calibration: random molecular orientations at the same positions give the continuum shift</span>
+<span class="k">for</span> (<span class="k">int</span> k = <span class="n">0</span>; k &lt; K; ++k) {
+  <span class="k">for</span> (<span class="k">auto</span>&amp; F : fr) F = <span class="k">Eigen</span>::Quaterniond(g(rng), g(rng), g(rng), g(rng)).normalized().toRotationMatrix();
+  avg += sum_v2(agg, place(fr), q, p.cutoff_nm, p.softening_nm).mean();
+}
+avg /= K;
+R.Q_cm_nm2 = R.continuum_cm / avg;
+<span class="k">for</span> (<span class="k">std</span>::size_t i = <span class="n">0</span>; i &lt; agg.size(); ++i) fr[i] = agg.frame(i);            <span class="c">// the real orientations</span>
+<span class="k">const</span> <span class="k">Eigen</span>::VectorXd S = sum_v2(agg, place(fr), q, p.cutoff_nm, p.softening_nm);
+R.dispersive_cm = R.Q_cm_nm2 * S;
+R.shift_cm = R.dispersive_cm.array() + R.to_gas_cm + p.extra_shift_cm;</code></pre></figure></div>
+  </div>
+  <div class="widget-slot" data-widget="w-shift"></div>
+</article>
+
+<article class="method" id="m-disorder">
+  <header><h3>Disorder and ensemble statistics</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">Spectra are averaged over realisations of the disorder until the standard error is below a tolerance. Observables (peak, width, Stokes shift) are taken from the averaged spectrum; their errors come from a bootstrap.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo stretchy="false">⟨</mo><msub><mi>δ</mi><mi>i</mi></msub><msub><mi>δ</mi><mi>j</mi></msub><mo stretchy="false">⟩</mo><mo>=</mo><msup><mi>σ</mi><mn>2</mn></msup><mtext> </mtext><msup><mi>e</mi><mrow><mo>−</mo><msub><mi>r</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi mathvariant="normal">/</mi><mi>ξ</mi></mrow></msup><mo separator="true">,</mo><mspace width="2em"/><mi mathvariant="bold-italic">δ</mi><mo>=</mo><mi>L</mi><mtext> </mtext><mi mathvariant="bold">z</mi><mo separator="true">,</mo><mspace width="1em"/><mi>L</mi><msup><mi>L</mi><mi mathvariant="sans-serif">T</mi></msup><mo>=</mo><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">v</mi></mrow></mrow><annotation encoding="application/x-tex">\langle\delta_i\delta_j\rangle=\sigma^2\,e^{-r_{ij}/\xi},\qquad \boldsymbol\delta=L\,\mathbf z,\quad LL^{\mathsf T}=\mathrm{Cov}</annotation></semantics></math></span></div><p class="note">Structural disorder (random tilts and displacements) rebuilds the coupling matrix in every realisation.</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/ensemble.cpp</figcaption><pre><code>C(i, j) = model.disorder_sigma_cm * model.disorder_sigma_cm *
+          <span class="k">std</span>::exp(-(agg.positions[i] - agg.positions[j]).norm() / model.disorder_corr_length_nm);
+<span class="k">Eigen</span>::LLT&lt;<span class="k">Eigen</span>::MatrixXd&gt; llt(C);
+chol = llt.matrixL();
+...
+R.H.diagonal() = <span class="k">Eigen</span>::VectorXd::Constant(z.size(), m.monomer_energy_cm) + (*chol) * z;</code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-bath">
+  <header><h3>Bath and line-shape function</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">Each molecule is coupled to its own harmonic bath: an overdamped (Drude) part for the solvent plus underdamped Brownian oscillators for intramolecular modes.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>J</mi><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mn>2</mn><mi>λ</mi><mi>γ</mi><mtext> </mtext><mi>ω</mi></mrow><mrow><msup><mi>ω</mi><mn>2</mn></msup><mo>+</mo><msup><mi>γ</mi><mn>2</mn></msup></mrow></mfrac><mo>+</mo><munder><mo>∑</mo><mi>k</mi></munder><mfrac><mrow><mn>2</mn><msub><mi>S</mi><mi>k</mi></msub><msubsup><mi>ω</mi><mi>k</mi><mn>3</mn></msubsup><msub><mi>γ</mi><mi>k</mi></msub><mtext> </mtext><mi>ω</mi></mrow><mrow><mo stretchy="false">(</mo><msubsup><mi>ω</mi><mi>k</mi><mn>2</mn></msubsup><mo>−</mo><msup><mi>ω</mi><mn>2</mn></msup><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo>+</mo><msubsup><mi>γ</mi><mi>k</mi><mn>2</mn></msubsup><msup><mi>ω</mi><mn>2</mn></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">J(\omega)=\frac{2\lambda\gamma\,\omega}{\omega^2+\gamma^2}+\sum_k\frac{2S_k\omega_k^3\gamma_k\,\omega}{(\omega_k^2-\omega^2)^2+\gamma_k^2\omega^2}</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>g</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>1</mn><mi>π</mi></mfrac><msubsup><mo>∫</mo><mn>0</mn><mi mathvariant="normal">∞</mi></msubsup><mfrac><mrow><mi>J</mi><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo></mrow><msup><mi>ω</mi><mn>2</mn></msup></mfrac><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">[</mo><mi>coth</mi><mo>⁡</mo><mfrac><mrow><mi>β</mi><mi>ω</mi></mrow><mn>2</mn></mfrac><mtext> </mtext><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>cos</mi><mo>⁡</mo><mi>ω</mi><mi>t</mi><mo stretchy="false">)</mo><mo>+</mo><mi>i</mi><mtext> </mtext><mo stretchy="false">(</mo><mi>sin</mi><mo>⁡</mo><mi>ω</mi><mi>t</mi><mo>−</mo><mi>ω</mi><mi>t</mi><mo stretchy="false">)</mo><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">]</mo><mtext> </mtext><mi>d</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">g(t)=\frac1\pi\int_0^\infty\frac{J(\omega)}{\omega^2}\Big[\coth\frac{\beta\omega}{2}\,(1-\cos\omega t)+i\,(\sin\omega t-\omega t)\Big]\,d\omega</annotation></semantics></math></span></div><p class="note">The Drude part of g(t) is summed analytically (Matsubara series with a tail correction); the mode part is integrated by FFT.</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/bath.cpp</figcaption><pre><code><span class="k">double</span> Bath::J_over_w(<span class="k">double</span> w) <span class="k">const</span> {
+  <span class="k">double</span> v = <span class="n">0.0</span>;
+  <span class="k">if</span> (lambda_cm &gt; <span class="n">0.0</span>) v += <span class="n">2.0</span> * lambda_cm * wc / (w * w + wc * wc);          <span class="c">// Drude</span>
+  <span class="k">for</span> (<span class="k">const</span> <span class="k">auto</span>&amp; m : modes) {                                                 <span class="c">// Brownian oscillators</span>
+    <span class="k">const</span> <span class="k">double</span> lk = m.huang_rhys * m.omega_cm;
+    <span class="k">const</span> <span class="k">double</span> d = m.omega_cm * m.omega_cm - w * w;
+    v += <span class="n">2.0</span> * lk * m.omega_cm * m.omega_cm * m.gamma_cm / (d * d + m.gamma_cm * m.gamma_cm * w * w);
+  }
+  <span class="k">return</span> v;
+}</code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-lineshape">
+  <header><h3>Cumulant absorption and fluorescence</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">Every exciton state contributes a line whose shape follows from g(t), narrowed by delocalisation and broadened by its population decay.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msubsup><mi>L</mi><mi>n</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">b</mi><mi mathvariant="normal">s</mi></mrow></msubsup><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>1</mn><mi>π</mi></mfrac><mtext> </mtext><mrow><mi mathvariant="normal">R</mi><mi mathvariant="normal">e</mi></mrow><msubsup><mo>∫</mo><mn>0</mn><mi mathvariant="normal">∞</mi></msubsup><msup><mi>e</mi><mrow><mtext> </mtext><mi>i</mi><mo stretchy="false">(</mo><mi>ω</mi><mo>−</mo><msub><mi>ε</mi><mi>n</mi></msub><mo stretchy="false">)</mo><mi>t</mi><mo>−</mo><msub><mi>s</mi><mi>n</mi></msub><mi>g</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>−</mo><msub><mi mathvariant="normal">Γ</mi><mi>n</mi></msub><mi>t</mi><mi mathvariant="normal">/</mi><mn>2</mn></mrow></msup><mtext> </mtext><mi>d</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">L^{\mathrm{abs}}_n(\omega)=\frac1\pi\,\mathrm{Re}\int_0^\infty e^{\,i(\omega-\varepsilon_n)t-s_n g(t)-\Gamma_n t/2}\,dt</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msubsup><mi>L</mi><mi>n</mi><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">m</mi></mrow></msubsup><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>1</mn><mi>π</mi></mfrac><mtext> </mtext><mrow><mi mathvariant="normal">R</mi><mi mathvariant="normal">e</mi></mrow><msubsup><mo>∫</mo><mn>0</mn><mi mathvariant="normal">∞</mi></msubsup><msup><mi>e</mi><mrow><mtext> </mtext><mi>i</mi><mo stretchy="false">(</mo><mi>ω</mi><mo>−</mo><msub><mi>ε</mi><mi>n</mi></msub><mo>+</mo><mn>2</mn><msub><mi>s</mi><mi>n</mi></msub><mi>λ</mi><mo stretchy="false">)</mo><mi>t</mi><mo>−</mo><msub><mi>s</mi><mi>n</mi></msub><msup><mi>g</mi><mo>∗</mo></msup><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>−</mo><msub><mi mathvariant="normal">Γ</mi><mi>n</mi></msub><mi>t</mi><mi mathvariant="normal">/</mi><mn>2</mn></mrow></msup><mtext> </mtext><mi>d</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">L^{\mathrm{em}}_n(\omega)=\frac1\pi\,\mathrm{Re}\int_0^\infty e^{\,i(\omega-\varepsilon_n+2s_n\lambda)t-s_n g^*(t)-\Gamma_n t/2}\,dt</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>σ</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">b</mi><mi mathvariant="normal">s</mi></mrow></msub><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mi>π</mi><mtext> </mtext><mi>ω</mi></mrow><mrow><mn>3</mn><msub><mi>ε</mi><mn>0</mn></msub><mi mathvariant="normal">ℏ</mi><mi>c</mi><mtext> </mtext><mi>n</mi></mrow></mfrac><munder><mo>∑</mo><mi>n</mi></munder><mi mathvariant="normal">∣</mi><msub><mi>μ</mi><mi>n</mi></msub><msup><mi mathvariant="normal">∣</mi><mn>2</mn></msup><msubsup><mi>L</mi><mi>n</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">b</mi><mi mathvariant="normal">s</mi></mrow></msubsup><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\sigma_{\mathrm{abs}}(\omega)=\frac{\pi\,\omega}{3\varepsilon_0\hbar c\,n}\sum_n|\mu_n|^2L^{\mathrm{abs}}_n(\omega)</annotation></semantics></math></span></div><p class="note">One FFT per state gives the whole line. The same function, kept complex, is the exciton resolvent used in the aggregate + particle response.</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/spectra.cpp</figcaption><pre><code><span class="k">const</span> <span class="k">double</span> shift = emission ? <span class="n">2.0</span> * s * lambda_ : <span class="n">0.0</span>;
+<span class="k">for</span> (<span class="k">std</span>::size_t j = <span class="n">0</span>; j &lt; n_; ++j) {
+  <span class="k">const</span> <span class="k">double</span> t = dt_ * static_cast&lt;<span class="k">double</span>&gt;(j);
+  <span class="k">const</span> <span class="k">std</span>::complex&lt;<span class="k">double</span>&gt; gj = emission ? <span class="k">std</span>::conj(g_[j]) : g_[j];
+  <span class="k">std</span>::complex&lt;<span class="k">double</span>&gt; F = <span class="k">std</span>::exp(-s * gj - <span class="n">0.5</span> * Gamma_cm * t + <span class="k">std</span>::complex&lt;<span class="k">double</span>&gt;(<span class="n">0.0</span>, shift * t));
+  <span class="k">if</span> (j == <span class="n">0</span>) F *= <span class="n">0.5</span>;                                  <span class="c">// trapezoid rule</span>
+  X[j][<span class="n">0</span>] = F.real();  X[j][<span class="n">1</span>] = F.imag();
+}
+fftw_execute_dft(static_cast&lt;fftw_plan&gt;(plan_), X, X);   <span class="c">// L(Δ) = dt · Re X / π</span></code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-redfield">
+  <header><h3>Redfield relaxation and kinetics</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">Populations of exciton states obey a Pauli master equation with secular Redfield rates. Detailed balance makes the stationary state Boltzmann.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>k</mi><mrow><mi>n</mi><mo>→</mo><mi>m</mi></mrow></msub><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><msubsup><mi>c</mi><mrow><mi>i</mi><mi>n</mi></mrow><mn>2</mn></msubsup><msubsup><mi>c</mi><mrow><mi>i</mi><mi>m</mi></mrow><mn>2</mn></msubsup><mtext>  </mtext><mover accent="true"><mi>C</mi><mo>~</mo></mover><mo stretchy="false">(</mo><msub><mi>ε</mi><mi>n</mi></msub><mo>−</mo><msub><mi>ε</mi><mi>m</mi></msub><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="2em"/><mover accent="true"><mi>C</mi><mo>~</mo></mover><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mn>2</mn><mi>J</mi><mo stretchy="false">(</mo><mi mathvariant="normal">∣</mi><mi>ω</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">)</mo><mtext> </mtext><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">n</mi></mrow><mtext> </mtext><mi>ω</mi></mrow><mrow><mn>1</mn><mo>−</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>β</mi><mi>ω</mi></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">k_{n\to m}=\sum_i c_{in}^2c_{im}^2\;\tilde C(\varepsilon_n-\varepsilon_m),\qquad \tilde C(\omega)=\frac{2J(|\omega|)\,\mathrm{sgn}\,\omega}{1-e^{-\beta\omega}}</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mover accent="true"><mi>P</mi><mo>˙</mo></mover><mi>n</mi></msub><mo>=</mo><munder><mo>∑</mo><mi>m</mi></munder><mrow><mo fence="true">(</mo><msub><mi>k</mi><mrow><mi>m</mi><mo>→</mo><mi>n</mi></mrow></msub><msub><mi>P</mi><mi>m</mi></msub><mo>−</mo><msub><mi>k</mi><mrow><mi>n</mi><mo>→</mo><mi>m</mi></mrow></msub><msub><mi>P</mi><mi>n</mi></msub><mo fence="true">)</mo></mrow><mo>−</mo><mo stretchy="false">(</mo><msubsup><mi mathvariant="normal">Γ</mi><mi>n</mi><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">d</mi></mrow></msubsup><mo>+</mo><msup><mi mathvariant="normal">Γ</mi><mrow><mi mathvariant="normal">n</mi><mi mathvariant="normal">r</mi></mrow></msup><mo stretchy="false">)</mo><msub><mi>P</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">\dot P_n=\sum_m\left(k_{m\to n}P_m-k_{n\to m}P_n\right)-(\Gamma^{\mathrm{rad}}_n+\Gamma^{\mathrm{nr}})P_n</annotation></semantics></math></span></div><p class="note">Steady-state populations under pumping weight the fluorescence lines; the quantum yield is ΣΓ<sub>rad</sub>P.</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/relaxation.cpp</figcaption><pre><code><span class="k">const</span> <span class="k">Eigen</span>::MatrixXd p = st.c.array().square().matrix();   <span class="c">// p(i,n) = c_in²</span>
+<span class="k">const</span> <span class="k">Eigen</span>::MatrixXd overlap = p.transpose() * p;          <span class="c">// Σ_i c_in² c_im²</span>
+<span class="k">for</span> (<span class="k">Eigen</span>::Index n = <span class="n">0</span>; n &lt; N; ++n)
+  <span class="k">for</span> (<span class="k">Eigen</span>::Index m = <span class="n">0</span>; m &lt; N; ++m)
+    <span class="k">if</span> (m != n) K(m, n) = overlap(m, n) * bath.rate_spectrum(st.energies(n) - st.energies(m));
+<span class="k">for</span> (<span class="k">Eigen</span>::Index n = <span class="n">0</span>; n &lt; N; ++n) K(n, n) = -K.col(n).sum();</code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-modredfield">
+  <header><h3>Modified Redfield theory</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">The diagonal part of the exciton–phonon coupling is treated exactly through g(t); only the off-diagonal part is perturbative. The rate is an overlap of donor fluorescence and acceptor absorption.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>k</mi><mrow><mi>M</mi><mo>→</mo><mi>N</mi></mrow></msub><mo>=</mo><mn>2</mn><mtext> </mtext><mrow><mi mathvariant="normal">R</mi><mi mathvariant="normal">e</mi></mrow><msubsup><mo>∫</mo><mn>0</mn><mi mathvariant="normal">∞</mi></msubsup><msup><mi>e</mi><mrow><mtext> </mtext><mi>i</mi><mi mathvariant="normal">Ω</mi><mi>t</mi><mo>−</mo><mi mathvariant="normal">Λ</mi><mi>g</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></msup><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">{</mo><mi>p</mi><mtext> </mtext><mover accent="true"><mi>g</mi><mo>¨</mo></mover><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>−</mo><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">[</mo><mo stretchy="false">(</mo><msub><mi>q</mi><mn>1</mn></msub><mo>−</mo><msub><mi>q</mi><mn>2</mn></msub><mo stretchy="false">)</mo><mtext> </mtext><mover accent="true"><mi>g</mi><mo>˙</mo></mover><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>+</mo><mn>2</mn><mi>i</mi><mi>λ</mi><msub><mi>q</mi><mn>1</mn></msub><msup><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">]</mo><mn>2</mn></msup><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">}</mo><mi>d</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">k_{M\to N}=2\,\mathrm{Re}\int_0^\infty e^{\,i\Omega t-\Lambda g(t)}\Big\{p\,\ddot g(t)-\big[(q_1-q_2)\,\dot g(t)+2i\lambda q_1\big]^2\Big\}dt</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="normal">Ω</mi><mo>=</mo><msub><mi>ε</mi><mi>M</mi></msub><mo>−</mo><msub><mi>ε</mi><mi>N</mi></msub><mo>−</mo><mn>2</mn><mi>λ</mi><mo stretchy="false">(</mo><mi>a</mi><mo>−</mo><mi>p</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="1em"/><mi mathvariant="normal">Λ</mi><mo>=</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>−</mo><mn>2</mn><mi>p</mi><mo separator="true">,</mo><mspace width="1em"/><mi>p</mi><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><msubsup><mi>c</mi><mrow><mi>i</mi><mi>M</mi></mrow><mn>2</mn></msubsup><msubsup><mi>c</mi><mrow><mi>i</mi><mi>N</mi></mrow><mn>2</mn></msubsup><mo separator="true">,</mo><mspace width="1em"/><msub><mi>q</mi><mn>1</mn></msub><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>c</mi><mrow><mi>i</mi><mi>N</mi></mrow></msub><msubsup><mi>c</mi><mrow><mi>i</mi><mi>M</mi></mrow><mn>3</mn></msubsup></mrow><annotation encoding="application/x-tex">\Omega=\varepsilon_M-\varepsilon_N-2\lambda(a-p),\quad \Lambda=a+b-2p,\quad p=\sum_i c_{iM}^2c_{iN}^2,\quad q_1=\sum_i c_{iN}c_{iM}^3</annotation></semantics></math></span></div><p class="note">Checked against detailed balance (0.5 %), the Redfield limit (3 %) and HEOM for a dimer with λ ≈ J.</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/modified_redfield.cpp</figcaption><pre><code><span class="k">const</span> <span class="k">double</span> Om = st.energies(M) - st.energies(N) - <span class="n">2.0</span> * lam * (a - p);
+<span class="k">const</span> <span class="k">double</span> Lam = a + b - <span class="n">2.0</span> * p;
+<span class="k">for</span> (<span class="k">std</span>::size_t j = <span class="n">0</span>; j &lt; nt; ++j) {
+  <span class="k">const</span> cd e = <span class="k">std</span>::exp(cd(<span class="n">0.0</span>, Om * t) - Lam * g[j]);
+  <span class="k">const</span> cd br = (q1 - q2) * g1[j] + cd(<span class="n">0.0</span>, <span class="n">2.0</span> * lam * q1);      <span class="c">// g1 = dg/dt, g2 = d²g/dt²</span>
+  <span class="k">const</span> <span class="k">double</span> f = (e * (p * g2[j] - br * br)).real();
+  acc += (j == <span class="n">0</span> ? <span class="n">0.5</span> : <span class="n">1.0</span>) * f;
+}
+K(N, M) = <span class="k">std</span>::max(<span class="n">0.0</span>, <span class="n">2.0</span> * acc * dt);</code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-heom">
+  <header><h3>HEOM reference</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">The hierarchical equations of motion solve the same model without the cumulant and Markov approximations. The program uses them as a built-in reference for small aggregates (Drude bath).</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mover accent="true"><mi>ρ</mi><mo>˙</mo></mover><mi mathvariant="bold">n</mi></msub><mo>=</mo><mo>−</mo><mi>i</mi><mo stretchy="false">[</mo><mi>H</mi><mo separator="true">,</mo><msub><mi>ρ</mi><mi mathvariant="bold">n</mi></msub><mo stretchy="false">]</mo><mo>−</mo><munder><mo>∑</mo><mrow><mi>j</mi><mo separator="true">,</mo><mi>k</mi></mrow></munder><msub><mi>n</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><msub><mi>ν</mi><mi>k</mi></msub><mtext> </mtext><msub><mi>ρ</mi><mi mathvariant="bold">n</mi></msub><mo>−</mo><mi>i</mi><munder><mo>∑</mo><mrow><mi>j</mi><mo separator="true">,</mo><mi>k</mi></mrow></munder><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">[</mo><msub><mi>V</mi><mi>j</mi></msub><mo separator="true">,</mo><msub><mi>ρ</mi><msubsup><mi mathvariant="bold">n</mi><mrow><mi>j</mi><mi>k</mi></mrow><mo lspace="0em" rspace="0em">+</mo></msubsup></msub><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">]</mo><mo>−</mo><mi>i</mi><munder><mo>∑</mo><mrow><mi>j</mi><mo separator="true">,</mo><mi>k</mi></mrow></munder><msub><mi>n</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">(</mo><msub><mi>c</mi><mi>k</mi></msub><msub><mi>V</mi><mi>j</mi></msub><msub><mi>ρ</mi><msubsup><mi mathvariant="bold">n</mi><mrow><mi>j</mi><mi>k</mi></mrow><mo lspace="0em" rspace="0em">−</mo></msubsup></msub><mo>−</mo><msubsup><mi>c</mi><mi>k</mi><mo>∗</mo></msubsup><msub><mi>ρ</mi><msubsup><mi mathvariant="bold">n</mi><mrow><mi>j</mi><mi>k</mi></mrow><mo lspace="0em" rspace="0em">−</mo></msubsup></msub><msub><mi>V</mi><mi>j</mi></msub><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">)</mo></mrow><annotation encoding="application/x-tex">\dot\rho_{\mathbf n}=-i[H,\rho_{\mathbf n}]-\sum_{j,k}n_{jk}\nu_k\,\rho_{\mathbf n}-i\sum_{j,k}\big[V_j,\rho_{\mathbf n^{+}_{jk}}\big]-i\sum_{j,k}n_{jk}\big(c_k V_j\rho_{\mathbf n^{-}_{jk}}-c_k^*\rho_{\mathbf n^{-}_{jk}}V_j\big)</annotation></semantics></math></span></div><p class="note">Depth and number of Matsubara terms are parameters; the GUI shows HEOM and the fast theory side by side with the difference.</p></div>
+    
+  </div>
+  
+</article>
+
+<article class="method" id="m-holstein">
+  <header><h3>Vibronic absorption: Holstein model</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">One intramolecular mode per molecule, one-particle approximation: the excited molecule carries ν vibrational quanta, all others stay in their vibrational ground state.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo stretchy="false">⟨</mo><mi>n</mi><mi>ν</mi><mi mathvariant="normal">∣</mi><mi>H</mi><mi mathvariant="normal">∣</mi><mi>n</mi><mi>ν</mi><mo stretchy="false">⟩</mo><mo>=</mo><msub><mi>E</mi><mi>n</mi></msub><mo>−</mo><mi>S</mi><msub><mi>ω</mi><mn>0</mn></msub><mo>+</mo><mi>ν</mi><msub><mi>ω</mi><mn>0</mn></msub><mo separator="true">,</mo><mspace width="2em"/><mo stretchy="false">⟨</mo><mi>n</mi><mi>ν</mi><mi mathvariant="normal">∣</mi><mi>H</mi><mi mathvariant="normal">∣</mi><mi>m</mi><msup><mi>ν</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo stretchy="false">⟩</mo><mo>=</mo><msub><mi>J</mi><mrow><mi>n</mi><mi>m</mi></mrow></msub><msub><mi>F</mi><mi>ν</mi></msub><msub><mi>F</mi><msup><mi>ν</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></msub><mo separator="true">,</mo><mspace width="2em"/><msub><mi>F</mi><mi>ν</mi></msub><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>S</mi><mi mathvariant="normal">/</mi><mn>2</mn></mrow></msup><mfrac><msup><mi>S</mi><mrow><mi>ν</mi><mi mathvariant="normal">/</mi><mn>2</mn></mrow></msup><msqrt><mrow><mi>ν</mi><mo stretchy="false">!</mo></mrow></msqrt></mfrac></mrow><annotation encoding="application/x-tex">\langle n\nu|H|n\nu\rangle=E_n-S\omega_0+\nu\omega_0,\qquad \langle n\nu|H|m\nu&#x27;\rangle=J_{nm}F_\nu F_{\nu&#x27;},\qquad F_\nu=e^{-S/2}\frac{S^{\nu/2}}{\sqrt{\nu!}}</annotation></semantics></math></span></div><p class="note">Reproduces the Poisson progression of the monomer and the growth (J) or loss (H) of the 0–0 band. Vibronic fluorescence needs two-particle states — planned.</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/vibronic.cpp</figcaption><pre><code><span class="k">for</span> (<span class="k">Eigen</span>::Index v = <span class="n">0</span>; v &lt; V; ++v)                            <span class="c">// Franck–Condon factors</span>
+  F(v) = <span class="k">std</span>::exp(-<span class="n">0.5</span> * p.huang_rhys + <span class="n">0.5</span> * v * <span class="k">std</span>::log(<span class="k">std</span>::max(p.huang_rhys, <span class="n">1e-300</span>)) - <span class="n">0.5</span> * <span class="k">std</span>::lgamma(v + <span class="n">1.0</span>));
+<span class="k">const</span> <span class="k">Eigen</span>::MatrixXd FF = F * F.transpose();
+...
+Hv(n * V + v, n * V + v) = H(n, n) - p.huang_rhys * p.omega_cm + <span class="k">double</span>(v) * p.omega_cm;
+Hv.block(n * V, m * V, V, V) = H(n, m) * FF;</code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-sphere">
+  <header><h3>Nanoparticle: multipole response</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">The field that the particle adds at each molecule is expanded in multipoles. Close to the surface many orders are needed (up to l = 120); the bare particle's cross sections come from full Mie theory.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mover accent="true"><mi>D</mi><mo>^</mo></mover><mi>l</mi></msub><mo>=</mo><mo>−</mo><mfrac><mrow><mi>l</mi><mtext> </mtext><mo stretchy="false">(</mo><mi>ε</mi><mo>−</mo><msub><mi>ε</mi><mi>m</mi></msub><mo stretchy="false">)</mo></mrow><mrow><mi>l</mi><mtext> </mtext><mi>ε</mi><mo>+</mo><mo stretchy="false">(</mo><mi>l</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mtext> </mtext><msub><mi>ε</mi><mi>m</mi></msub></mrow></mfrac><mo separator="true">,</mo><mspace width="2em"/><mi>α</mi><mo>=</mo><mo>−</mo><msub><mover accent="true"><mi>D</mi><mo>^</mo></mover><mn>1</mn></msub><msup><mi>R</mi><mn>3</mn></msup><mo>=</mo><msup><mi>R</mi><mn>3</mn></msup><mfrac><mrow><mi>ε</mi><mo>−</mo><msub><mi>ε</mi><mi>m</mi></msub></mrow><mrow><mi>ε</mi><mo>+</mo><mn>2</mn><msub><mi>ε</mi><mi>m</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\hat D_l=-\frac{l\,(\varepsilon-\varepsilon_m)}{l\,\varepsilon+(l+1)\,\varepsilon_m},\qquad \alpha=-\hat D_1R^3=R^3\frac{\varepsilon-\varepsilon_m}{\varepsilon+2\varepsilon_m}</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>W</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mi>C</mi><msup><mi>μ</mi><mn>2</mn></msup></mrow><msub><mi>ε</mi><mi>m</mi></msub></mfrac><mtext> </mtext><mo stretchy="false">(</mo><msub><mover accent="true"><mi>μ</mi><mo>^</mo></mover><mi>i</mi></msub><mtext> ⁣</mtext><mo>⋅</mo><mtext> ⁣</mtext><mi mathvariant="normal">∇</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><msub><mover accent="true"><mi>μ</mi><mo>^</mo></mover><mi>j</mi></msub><mtext> ⁣</mtext><mo>⋅</mo><mtext> ⁣</mtext><msup><mi mathvariant="normal">∇</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo stretchy="false">)</mo><mtext> </mtext><msub><mi>K</mi><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow></msub><mo stretchy="false">(</mo><msub><mi mathvariant="bold">r</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi mathvariant="bold">r</mi><mi>j</mi></msub><mo separator="true">;</mo><mi>ω</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">W_{ij}(\omega)=\frac{C\mu^2}{\varepsilon_m}\,(\hat\mu_i\!\cdot\!\nabla)(\hat\mu_j\!\cdot\!\nabla&#x27;)\,K_{\mathrm{ind}}(\mathbf r_i,\mathbf r_j;\omega)</annotation></semantics></math></span></div><p class="note">For spheroids the same expansion is written in spheroidal coordinates with Legendre functions of the second kind. A Gauss–Hermite average over the radius models a size distribution.</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/plexciton.cpp</figcaption><pre><code><span class="c">// sphere: D_l depends only on l, so W = pref · Σ_l D_l(ω) · G_l with precomputed N×N matrices G_l</span>
+<span class="k">for</span> (<span class="k">int</span> l = <span class="n">1</span>; l &lt;= particle_-&gt;l_max(); ++l) {
+  <span class="k">const</span> cd Dl = d(t0) / terms[t0].w;
+  Wr.noalias() += Dl.real() * Gl_[l - <span class="n">1</span>];
+  Wi.noalias() += Dl.imag() * Gl_[l - <span class="n">1</span>];
+}
+F.W = pref * (Wr.cast&lt;cd&gt;() + cd(<span class="n">0.0</span>, <span class="n">1.0</span>) * Wi.cast&lt;cd&gt;());</code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-layered">
+  <header><h3>Ligand shell and Feibelman surface response</h3><span class="badge partial"><i>◐</i>Partly implemented</span></header>
+  <p class="lead">A dielectric shell around the metal core and the quantum spill-out of the electron density both enter as boundary conditions of the multipole problem.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>ε</mi><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi></mrow></msub><mtext> </mtext><msub><mi mathvariant="normal">∂</mi><mi>r</mi></msub><msub><mi>ϕ</mi><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi></mrow></msub><mo>=</mo><msub><mi>ε</mi><mrow><mi mathvariant="normal">o</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">t</mi></mrow></msub><mtext> </mtext><msub><mi mathvariant="normal">∂</mi><mi>r</mi></msub><msub><mi>ϕ</mi><mrow><mi mathvariant="normal">o</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">t</mi></mrow></msub><mo separator="true">,</mo><mspace width="2em"/><msub><mi>ϕ</mi><mrow><mi mathvariant="normal">o</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">t</mi></mrow></msub><mo>−</mo><msub><mi>ϕ</mi><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi></mrow></msub><mo>=</mo><mo>−</mo><msub><mi>d</mi><mo>⊥</mo></msub><mtext> </mtext><mo stretchy="false">(</mo><msub><mi mathvariant="normal">∂</mi><mi>r</mi></msub><msub><mi>ϕ</mi><mrow><mi mathvariant="normal">o</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">t</mi></mrow></msub><mo>−</mo><msub><mi mathvariant="normal">∂</mi><mi>r</mi></msub><msub><mi>ϕ</mi><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi></mrow></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\varepsilon_{\mathrm{in}}\,\partial_r\phi_{\mathrm{in}}=\varepsilon_{\mathrm{out}}\,\partial_r\phi_{\mathrm{out}},\qquad \phi_{\mathrm{out}}-\phi_{\mathrm{in}}=-d_\perp\,(\partial_r\phi_{\mathrm{out}}-\partial_r\phi_{\mathrm{in}})</annotation></semantics></math></span></div><p class="note">Radial functions are scaled by the outer radius — otherwise the linear system becomes singular for l ≳ 7. Status: spheres only; spheroids are planned.</p></div>
+    <div class="src"><figure class="code"><figcaption>plasmonics/src/layered.cpp</figcaption><pre><code><span class="k">const</span> <span class="k">double</span> rp = <span class="k">std</span>::pow(R / bR, l), rq = <span class="k">std</span>::pow(bR / R, l + <span class="n">1</span>);   <span class="c">// scaled r^l and r^-(l+1)</span>
+<span class="k">const</span> <span class="k">double</span> dp = L / R * rp, dq = -(L + <span class="n">1</span>) / R * rq;
+<span class="c">// (1) eps_in dphi_in - eps_out dphi_out = 0      (2) phi_out - phi_in + d (dphi_out - dphi_in) = 0</span>
+A(e1, col) += eps[b] * der;
+A(e2, col) += -val - d * der;</code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-mlwa">
+  <header><h3>Retardation corrections</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">The quasi-static response is corrected for radiation damping and dynamic depolarisation: exact Mie coefficients for spheres, the modified long-wavelength approximation for spheroids.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>f</mi><mi>l</mi></msub><mo>=</mo><mfrac><mrow><msubsup><mi>a</mi><mi>l</mi><mrow><mi mathvariant="normal">M</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">e</mi></mrow></msubsup><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mrow><msubsup><mi>a</mi><mi>l</mi><mrow><mi mathvariant="normal">q</mi><mi mathvariant="normal">s</mi></mrow></msubsup><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mfrac><mo separator="true">,</mo><mspace width="2em"/><msubsup><mi>a</mi><mi>l</mi><mrow><mi mathvariant="normal">q</mi><mi mathvariant="normal">s</mi></mrow></msubsup><mo>=</mo><mfrac><mrow><mi>i</mi><mtext> </mtext><mo stretchy="false">(</mo><mi>l</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mtext> </mtext><msup><mi>x</mi><mrow><mn>2</mn><mi>l</mi><mo>+</mo><mn>1</mn></mrow></msup></mrow><mrow><mi>l</mi><mtext> </mtext><mo stretchy="false">(</mo><mn>2</mn><mi>l</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">!</mo><mo stretchy="false">!</mo><mtext> </mtext><mo stretchy="false">(</mo><mn>2</mn><mi>l</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">!</mo><mo stretchy="false">!</mo></mrow></mfrac><mtext> </mtext><msub><mover accent="true"><mi>D</mi><mo>^</mo></mover><mi>l</mi></msub></mrow><annotation encoding="application/x-tex">f_l=\frac{a_l^{\mathrm{Mie}}(x)}{a_l^{\mathrm{qs}}(x)},\qquad a_l^{\mathrm{qs}}=\frac{i\,(l+1)\,x^{2l+1}}{l\,(2l+1)!!\,(2l-1)!!}\,\hat D_l</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>α</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>=</mo><mfrac><mi>α</mi><mrow><mn>1</mn><mo>−</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><msup><mi>k</mi><mn>2</mn></msup><mi>a</mi></mfrac></mstyle><mi>α</mi><mo>−</mo><mstyle scriptlevel="0" displaystyle="true"><mfrac><mrow><mn>2</mn><mi>i</mi></mrow><mn>3</mn></mfrac></mstyle><msup><mi>k</mi><mn>3</mn></msup><mi>α</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\alpha&#x27;=\frac{\alpha}{1-\dfrac{k^2}{a}\alpha-\dfrac{2i}{3}k^3\alpha}</annotation></semantics></math></span></div></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/plexciton.cpp</figcaption><pre><code><span class="c">// MLWA (Meier–Wokaun): alpha' = alpha / (1 - (k²/a) alpha - i (2/3) k³ alpha)</span>
+a_dyn(a) = a_qs(a) / (<span class="n">1.0</span> - F.k * F.k / ax(a) * a_qs(a) - cd(<span class="n">0.0</span>, <span class="n">2.0</span> / <span class="n">3.0</span>) * <span class="k">std</span>::pow(F.k, <span class="n">3</span>) * a_qs(a));</code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-response">
+  <header><h3>Aggregate + particle: linear response</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">Molecules and particle are solved together. The exciton block uses the same cumulant resolvent as the bare-aggregate spectrum, so both spectra are consistent by construction.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>α</mi><mrow><mi mathvariant="normal">t</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">t</mi></mrow></msub><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>=</mo><msub><mi>α</mi><mrow><mi mathvariant="normal">N</mi><mi mathvariant="normal">P</mi></mrow></msub><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>+</mo><mi>c</mi><mtext> </mtext><msup><mi>M</mi><mi mathvariant="sans-serif">T</mi></msup><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">[</mo><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">g</mi></mrow><mtext> </mtext><msub><mi>a</mi><mi>n</mi></msub><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>+</mo><msup><mi>U</mi><mi mathvariant="sans-serif">T</mi></msup><mi>W</mi><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mi>U</mi><msup><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">]</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><mi>M</mi><mo separator="true">,</mo><mspace width="2em"/><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mo>−</mo><mfrac><mi>i</mi><mrow><msub><mi>X</mi><mi>n</mi></msub><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">\alpha_{\mathrm{tot}}(\omega)=\alpha_{\mathrm{NP}}(\omega)+c\,M^{\mathsf T}\big[\mathrm{diag}\,a_n(\omega)+U^{\mathsf T}W(\omega)U\big]^{-1}M,\qquad a_n=-\frac{i}{X_n(\omega)}</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>σ</mi><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">x</mi><mi mathvariant="normal">t</mi></mrow></msub><mo>=</mo><mn>4</mn><mi>π</mi><mi>k</mi><mtext> </mtext><mrow><mi mathvariant="normal">I</mi><mi mathvariant="normal">m</mi></mrow><mtext> </mtext><mstyle scriptlevel="0" displaystyle="false"><mfrac><mn>1</mn><mn>3</mn></mfrac></mstyle><mrow><mi mathvariant="normal">T</mi><mi mathvariant="normal">r</mi></mrow><mtext> </mtext><msub><mi>α</mi><mrow><mi mathvariant="normal">t</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">t</mi></mrow></msub><mo separator="true">,</mo><mspace width="2em"/><msub><mi>σ</mi><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi></mrow></msub><mo>=</mo><mstyle scriptlevel="0" displaystyle="false"><mfrac><mrow><mn>8</mn><mi>π</mi></mrow><mn>3</mn></mfrac></mstyle><msup><mi>k</mi><mn>4</mn></msup><mtext> </mtext><mstyle scriptlevel="0" displaystyle="false"><mfrac><mn>1</mn><mn>3</mn></mfrac></mstyle><munder><mo>∑</mo><mrow><mi>a</mi><mi>b</mi></mrow></munder><mi mathvariant="normal">∣</mi><msub><mi>α</mi><mrow><mi>a</mi><mi>b</mi></mrow></msub><msup><mi mathvariant="normal">∣</mi><mn>2</mn></msup><mo separator="true">,</mo><mspace width="2em"/><msub><mi>σ</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">b</mi><mi mathvariant="normal">s</mi></mrow></msub><mo>=</mo><msub><mi>σ</mi><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">x</mi><mi mathvariant="normal">t</mi></mrow></msub><mo>−</mo><msub><mi>σ</mi><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\sigma_{\mathrm{ext}}=4\pi k\,\mathrm{Im}\,\tfrac13\mathrm{Tr}\,\alpha_{\mathrm{tot}},\qquad \sigma_{\mathrm{sca}}=\tfrac{8\pi}{3}k^4\,\tfrac13\sum_{ab}|\alpha_{ab}|^2,\qquad \sigma_{\mathrm{abs}}=\sigma_{\mathrm{ext}}-\sigma_{\mathrm{sca}}</annotation></semantics></math></span></div><p class="note">X<sub>n</sub>(ω) is the complex cumulant response of exciton n; M contains the local-field factors L<sub>i</sub><sup>T</sup>μ̂<sub>i</sub> projected on the exciton states.</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/plexciton.cpp</figcaption><pre><code><span class="c">// in the exciton basis: A = diag(a_n) + Uᵀ W U,  M' = Uᵀ M</span>
+<span class="k">Eigen</span>::MatrixXcd A = U.transpose().cast&lt;cd&gt;() * F.W * U.cast&lt;cd&gt;();
+<span class="k">for</span> (<span class="k">Eigen</span>::Index n = <span class="n">0</span>; n &lt; N; ++n) A(n, n) += diag[rr][n * nw + q];
+X = A.partialPivLu().solve(Mx);
+<span class="k">const</span> <span class="k">Eigen</span>::Matrix3cd a_tot = a_np + c_mol * (Mx.transpose() * X);
+<span class="c">// cross(a, ext, sca) for a = a_tot:</span>
+ext = <span class="n">4.0</span> * pi * F.k * a.trace().imag() / <span class="n">3.0</span>;
+sca = <span class="n">8.0</span> * pi / <span class="n">3.0</span> * <span class="k">std</span>::pow(F.k, <span class="n">4</span>) * a.cwiseAbs2().sum() / <span class="n">3.0</span>;</code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-woodbury">
+  <header><h3>Fast solver for large aggregates</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">Low multipoles couple all molecules but have low rank; high multipoles are short-ranged and nearly diagonal in the exciton basis. This turns an N×N solve per frequency into a small one.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>A</mi><mo>=</mo><msub><mi>A</mi><mn>0</mn></msub><mo>+</mo><mi>B</mi><mtext> </mtext><mi>δ</mi><mtext> </mtext><msup><mi>B</mi><mi mathvariant="sans-serif">T</mi></msup><mo separator="true">,</mo><mspace width="2em"/><mi>X</mi><mo>=</mo><mi>Y</mi><mo>−</mo><mi>Z</mi><mtext> </mtext><mo stretchy="false">(</mo><mi>I</mi><mo>+</mo><mi>δ</mi><msup><mi>B</mi><mi mathvariant="sans-serif">T</mi></msup><mi>Z</mi><msup><mo stretchy="false">)</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><mtext> </mtext><mi>δ</mi><msup><mi>B</mi><mi mathvariant="sans-serif">T</mi></msup><mi>Y</mi><mo separator="true">,</mo><mspace width="2em"/><mi>Y</mi><mo>=</mo><msubsup><mi>A</mi><mn>0</mn><mrow><mo>−</mo><mn>1</mn></mrow></msubsup><mi>M</mi><mo separator="true">,</mo><mtext>  </mtext><mi>Z</mi><mo>=</mo><msubsup><mi>A</mi><mn>0</mn><mrow><mo>−</mo><mn>1</mn></mrow></msubsup><mi>B</mi></mrow><annotation encoding="application/x-tex">A=A_0+B\,\delta\,B^{\mathsf T},\qquad X=Y-Z\,(I+\delta B^{\mathsf T}Z)^{-1}\,\delta B^{\mathsf T}Y,\qquad Y=A_0^{-1}M,\ \ Z=A_0^{-1}B</annotation></semantics></math></span></div><p class="note">Error against the exact solver for 300 molecules: 0.7 % (l ≤ 8 exact) and 0.16 % (l ≤ 16).</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/plexciton.cpp</figcaption><pre><code><span class="k">const</span> <span class="k">Eigen</span>::MatrixXcd Y = inv.asDiagonal() * Mx, Z = inv.asDiagonal() * B;
+<span class="k">Eigen</span>::MatrixXcd S = dl.asDiagonal() * (B.transpose() * Z);
+S.diagonal().array() += <span class="n">1.0</span>;
+X = Y - Z * S.partialPivLu().solve(dl.asDiagonal() * (B.transpose() * Y));</code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-decay">
+  <header><h3>Decay near the particle: Purcell factor and quantum yield</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">A molecule next to the metal radiates together with the dipole it induces in the particle, and loses energy to absorption in the metal. Their balance decides between enhancement and quenching.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi mathvariant="normal">Γ</mi><mrow><mi mathvariant="normal">t</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">t</mi></mrow></msub><mo>=</mo><msub><mi mathvariant="normal">Γ</mi><mn>0</mn></msub><mtext> </mtext><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">∣</mo><msup><mi>L</mi><mi mathvariant="sans-serif">T</mi></msup><mover accent="true"><mi>μ</mi><mo>^</mo></mover><msup><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">∣</mo><mn>2</mn></msup><mo>+</mo><msub><mi mathvariant="normal">Γ</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">b</mi><mi mathvariant="normal">s</mi></mrow></msub><mo separator="true">,</mo><mspace width="2em"/><mrow><mi mathvariant="normal">Q</mi><mi mathvariant="normal">Y</mi></mrow><mo>=</mo><mfrac><mrow><msub><mi mathvariant="normal">Γ</mi><mn>0</mn></msub><mtext> </mtext><mi mathvariant="normal">∣</mi><msup><mi>L</mi><mi mathvariant="sans-serif">T</mi></msup><mover accent="true"><mi>μ</mi><mo>^</mo></mover><msup><mi mathvariant="normal">∣</mi><mn>2</mn></msup></mrow><mrow><msub><mi mathvariant="normal">Γ</mi><mrow><mi mathvariant="normal">t</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">t</mi></mrow></msub><mo>+</mo><msub><mi mathvariant="normal">Γ</mi><mrow><mi mathvariant="normal">n</mi><mi mathvariant="normal">r</mi></mrow></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\Gamma_{\mathrm{tot}}=\Gamma_0\,\big|L^{\mathsf T}\hat\mu\big|^2+\Gamma_{\mathrm{abs}},\qquad \mathrm{QY}=\frac{\Gamma_0\,|L^{\mathsf T}\hat\mu|^2}{\Gamma_{\mathrm{tot}}+\Gamma_{\mathrm{nr}}}</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi mathvariant="normal">Γ</mi><mn>0</mn></msub><mo>=</mo><mfrac><mrow><mi>n</mi><mtext> </mtext><msup><mi>ω</mi><mn>3</mn></msup><msup><mi>μ</mi><mn>2</mn></msup></mrow><mrow><mn>3</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub><mi mathvariant="normal">ℏ</mi><msup><mi>c</mi><mn>3</mn></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">\Gamma_0=\frac{n\,\omega^3\mu^2}{3\pi\varepsilon_0\hbar c^3}</annotation></semantics></math></span></div><p class="note">Validated against the exact Mie solution for a dipole near a sphere: 1–3 % for R ≤ 10 nm; the error grows for R ≳ 20 nm (see Validation).</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/plexciton.cpp</figcaption><pre><code><span class="k">const</span> <span class="k">Eigen</span>::Vector3cd me = F.L[i].transpose() * agg_.dipoles[i].cast&lt;cd&gt;();
+o.rad_enhancement = me.squaredNorm();                              <span class="c">// |Lᵀ mu|²: emission through the particle</span>
+o.nonrad_to_np_ps = <span class="k">std</span>::max(<span class="n">0.0</span>, (-<span class="n">2.0</span> * Wa(ii).imag() + <span class="n">2.0</span> * pref * ret) * units::rad_ps_per_cm);
+<span class="k">const</span> <span class="k">double</span> grad = gamma0_ps * o.rad_enhancement;
+o.quantum_yield = grad / (grad + o.nonrad_to_np_ps + gamma_nr_ps);</code></pre></figure></div>
+  </div>
+  
+</article>
+
+<article class="method" id="m-strong">
+  <header><h3>Coupling strength and strong-coupling criteria</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">The collective coupling g between the molecular layer and the dipolar plasmon is computed from the plasmon pole and the mode field at the molecules — not from fitted peak positions, which overestimate g when the branches are not resolved.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>α</mi><mi>a</mi></msub><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>≈</mo><mfrac><mi>A</mi><mrow><msubsup><mi>ω</mi><mi>p</mi><mn>2</mn></msubsup><mo>−</mo><msup><mi>ω</mi><mn>2</mn></msup><mo>−</mo><mi>i</mi><msub><mi>γ</mi><mi>p</mi></msub><mi>ω</mi></mrow></mfrac><mo>+</mo><mi>B</mi><mo separator="true">,</mo><mspace width="2em"/><msup><mi>g</mi><mn>2</mn></msup><mo>=</mo><mfrac><mi>A</mi><mrow><mn>2</mn><msub><mi>ω</mi><mi>p</mi></msub></mrow></mfrac><mtext> </mtext><mrow><mi mathvariant="normal">T</mi><mi mathvariant="normal">r</mi></mrow><mtext> </mtext><msub><mi>K</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">\alpha_a(\omega)\approx\frac{A}{\omega_p^2-\omega^2-i\gamma_p\omega}+B,\qquad g^2=\frac{A}{2\omega_p}\,\mathrm{Tr}\,K_a</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>ω</mi><mo>±</mo></msub><mo>=</mo><mfrac><mrow><msub><mi>ω</mi><mi>p</mi></msub><mo>+</mo><msub><mi>ω</mi><mi>x</mi></msub></mrow><mn>2</mn></mfrac><mo>−</mo><mfrac><mrow><mi>i</mi><mo stretchy="false">(</mo><msub><mi>γ</mi><mi>p</mi></msub><mo>+</mo><msub><mi>γ</mi><mi>x</mi></msub><mo stretchy="false">)</mo></mrow><mn>4</mn></mfrac><mo>±</mo><msqrt><mrow><msup><mi>g</mi><mn>2</mn></msup><mo>+</mo><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">[</mo><mfrac><mrow><msub><mi>ω</mi><mi>p</mi></msub><mo>−</mo><msub><mi>ω</mi><mi>x</mi></msub></mrow><mn>2</mn></mfrac><mo>−</mo><mfrac><mrow><mi>i</mi><mo stretchy="false">(</mo><msub><mi>γ</mi><mi>p</mi></msub><mo>−</mo><msub><mi>γ</mi><mi>x</mi></msub><mo stretchy="false">)</mo></mrow><mn>4</mn></mfrac><msup><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">]</mo><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">\omega_\pm=\frac{\omega_p+\omega_x}{2}-\frac{i(\gamma_p+\gamma_x)}{4}\pm\sqrt{g^2+\Big[\frac{\omega_p-\omega_x}{2}-\frac{i(\gamma_p-\gamma_x)}{4}\Big]^2}</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>2</mn><mi>g</mi><mo>&gt;</mo><mfrac><mrow><msub><mi>γ</mi><mi>p</mi></msub><mo>+</mo><msub><mi>γ</mi><mi>x</mi></msub></mrow><mn>2</mn></mfrac><mtext>  </mtext><mo stretchy="false">(</mo><mtext>visible splitting</mtext><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="2em"/><mi>g</mi><mo>&gt;</mo><mfrac><mrow><mi mathvariant="normal">∣</mi><msub><mi>γ</mi><mi>p</mi></msub><mo>−</mo><msub><mi>γ</mi><mi>x</mi></msub><mi mathvariant="normal">∣</mi></mrow><mn>4</mn></mfrac><mtext>  </mtext><mo stretchy="false">(</mo><mtext>anticrossing</mtext><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="2em"/><mi>C</mi><mo>=</mo><mfrac><mrow><mn>4</mn><msup><mi>g</mi><mn>2</mn></msup></mrow><mrow><msub><mi>γ</mi><mi>p</mi></msub><msub><mi>γ</mi><mi>x</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">2g&gt;\frac{\gamma_p+\gamma_x}{2}\ \ (\text{visible splitting}),\qquad g&gt;\frac{|\gamma_p-\gamma_x|}{4}\ \ (\text{anticrossing}),\qquad C=\frac{4g^2}{\gamma_p\gamma_x}</annotation></semantics></math></span></div></div>
+    <div class="src"><figure class="code"><figcaption>excitons/app/scan.cpp</figcaption><pre><code><span class="k">void</span> coupled_branches(<span class="k">double</span> wp, <span class="k">double</span> gp, <span class="k">double</span> wx, <span class="k">double</span> gx, <span class="k">double</span> g, <span class="k">double</span>&amp; lower, <span class="k">double</span>&amp; upper) {
+  <span class="k">const</span> cd mean = <span class="n">0.5</span> * (wp + wx) - cd(<span class="n">0.0</span>, <span class="n">0.25</span> * (gp + gx));
+  <span class="k">const</span> cd half = <span class="n">0.5</span> * (wp - wx) - cd(<span class="n">0.0</span>, <span class="n">0.25</span> * (gp - gx));
+  <span class="k">const</span> cd root = <span class="k">std</span>::sqrt(g * g + half * half);
+  <span class="k">const</span> <span class="k">double</span> a = (mean + root).real(), b = (mean - root).real();
+  lower = <span class="k">std</span>::min(a, b);
+  upper = <span class="k">std</span>::max(a, b);
+}</code></pre></figure></div>
+  </div>
+  <div class="widget-slot" data-widget="w-anticross"></div>
+</article>
+
+<article class="method" id="m-calibration">
+  <header><h3>Calibration on monomer spectra</h3><span class="badge done"><i>✓</i>Implemented</span></header>
+  <p class="lead">Before an aggregate is calculated, the molecule itself is calibrated: absorption and fluorescence of the monomer are fitted together, which fixes the transition energy, the bath and the static width. The transition dipole follows from the absolute extinction.</p>
+  <div class="cols">
+    <div class="math"><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>A</mi><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>∝</mo><mi>ω</mi><mtext> </mtext><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">[</mo><msup><mi>L</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">b</mi><mi mathvariant="normal">s</mi></mrow></msup><mo>⊗</mo><msub><mi>G</mi><mi>σ</mi></msub><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">]</mo><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="2em"/><mi>F</mi><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo><mo>∝</mo><msup><mi>ω</mi><mn>3</mn></msup><mtext> </mtext><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">[</mo><msup><mi>L</mi><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">m</mi></mrow></msup><mo>⊗</mo><msub><mi>G</mi><mi>σ</mi></msub><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">]</mo><mo stretchy="false">(</mo><mi>ω</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">A(\omega)\propto\omega\,\big[L^{\mathrm{abs}}\otimes G_\sigma\big](\omega),\qquad F(\omega)\propto\omega^3\,\big[L^{\mathrm{em}}\otimes G_\sigma\big](\omega)</annotation></semantics></math></span></div><div class="eq"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>μ</mi><mn>2</mn></msup><mo>=</mo><mfrac><mrow><mn>3</mn><msub><mi>ε</mi><mn>0</mn></msub><mi mathvariant="normal">ℏ</mi><mi>c</mi><mtext> </mtext><mi>n</mi></mrow><mi>π</mi></mfrac><mo>∫</mo><mfrac><mrow><mi>σ</mi><mo stretchy="false">(</mo><mover accent="true"><mi>ν</mi><mo>~</mo></mover><mo stretchy="false">)</mo></mrow><mover accent="true"><mi>ν</mi><mo>~</mo></mover></mfrac><mtext> </mtext><mi>d</mi><mover accent="true"><mi>ν</mi><mo>~</mo></mover><mo separator="true">,</mo><mspace width="2em"/><msub><mi>k</mi><mi>r</mi></msub><mo>=</mo><mn>2.880</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>9</mn></mrow></msup><mtext> </mtext><msup><mi>n</mi><mn>2</mn></msup><mtext> </mtext><mo stretchy="false">⟨</mo><msup><mover accent="true"><mi>ν</mi><mo>~</mo></mover><mrow><mo>−</mo><mn>3</mn></mrow></msup><msup><mo stretchy="false">⟩</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><mtext> ⁣</mtext><mo>∫</mo><mfrac><mrow><mi>ϵ</mi><mo stretchy="false">(</mo><mover accent="true"><mi>ν</mi><mo>~</mo></mover><mo stretchy="false">)</mo></mrow><mover accent="true"><mi>ν</mi><mo>~</mo></mover></mfrac><mtext> </mtext><mi>d</mi><mover accent="true"><mi>ν</mi><mo>~</mo></mover></mrow><annotation encoding="application/x-tex">\mu^2=\frac{3\varepsilon_0\hbar c\,n}{\pi}\int\frac{\sigma(\tilde\nu)}{\tilde\nu}\,d\tilde\nu,\qquad k_r=2.880\times10^{-9}\,n^2\,\langle\tilde\nu^{-3}\rangle^{-1}\!\int\frac{\epsilon(\tilde\nu)}{\tilde\nu}\,d\tilde\nu</annotation></semantics></math></span></div><p class="note">Static broadening is applied in the time domain (a factor exp(−σ²t²/2)), so the model is evaluated directly at the data points. Without a fluorescence spectrum the bath is not determined — always supply one.</p></div>
+    <div class="src"><figure class="code"><figcaption>excitons/src/monomer_fit.cpp</figcaption><pre><code><span class="k">const</span> <span class="k">double</span> env = <span class="k">std</span>::exp(-<span class="n">0.5</span> * sg * sg * t * t);                       <span class="c">// static Gaussian broadening</span>
+fa[j] = wj * env * <span class="k">std</span>::exp(-g[j]);                                         <span class="c">// absorption kernel</span>
+fe[j] = wj * env * <span class="k">std</span>::exp(<span class="k">std</span>::complex&lt;<span class="k">double</span>&gt;(<span class="n">0.0</span>, <span class="n">2.0</span> * lam * t) - <span class="k">std</span>::conj(g[j]));   <span class="c">// emission kernel</span>
+...
+abs[i] = x * sa.real();             <span class="c">// A(w) ∝ w · L_abs</span>
+em[i]  = x * x * x * se.real();     <span class="c">// F(w) ∝ w³ · L_em</span></code></pre></figure></div>
+  </div>
+  
+</article>
+
+<h2 id="gallery">The interface</h2>
+<p class="lead">Parameters and a 3D preview on the left, results on the right. Every plot can be zoomed, exported (PNG, SVG, CSV) and compared with measured data.</p>
+<div class="shots">
+  <figure><img loading="lazy" src="screenshots/gui_calibration.png" alt="Calibration tab"><figcaption><b>Calibration.</b> Monomer absorption and fluorescence, fitted model, residuals and parameters with errors.</figcaption></figure>
+  <figure><img loading="lazy" src="screenshots/gui_scan_hybrid.png" alt="Scan tab"><figcaption><b>Scan.</b> The exciton energy is tuned across the plasmon of a gold sphere; coupling analysis below the map.</figcaption></figure>
+  <figure><img loading="lazy" src="screenshots/gui_aggregate_np.png" alt="Aggregate plus nanoparticle tab"><figcaption><b>Aggregate + particle.</b> Contribution of the molecular layer to extinction, absorption and scattering.</figcaption></figure>
+  <figure><img loading="lazy" src="screenshots/gui_near_field.png" alt="Near field tab"><figcaption><b>Near field.</b> Field enhancement, quenching rate and quantum yield for every molecule.</figcaption></figure>
+  <figure><img loading="lazy" src="screenshots/gui_heom.png" alt="HEOM reference tab"><figcaption><b>HEOM reference.</b> The fast theory against the numerically exact calculation.</figcaption></figure>
+  <figure><img loading="lazy" src="demo/figures/fig2_nanotube_levels.png" alt="Predicted and measured J-band of the C8S3 nanotube"><figcaption><b>Example study.</b> J-band of the C8S3 nanotube predicted at four levels of the model, without fitting the aggregate spectrum.</figcaption></figure>
+</div>
+
+<h2 id="config">Configuration</h2>
+<p class="lead">One JSON file describes a calculation. Unknown keys are errors; keys that start with an underscore are comments; file paths are relative to the config. The GUI edits the same file.</p>
+<figure class="code"><figcaption>examples/demo_c8s3/2d_nanotube_tddft.json (abridged)</figcaption><pre><code>{
+  <span class="k">"output_dir"</span>: "results/2_nanotube",
+  <span class="k">"configurations"</span>: [ { <span class="k">"name"</span>: "tddft_charges", <span class="k">"geometry_type"</span>: "brickwork_tube", <span class="k">"geometry_params"</span>: {} } ],
+  <span class="k">"exciton"</span>: {
+    <span class="k">"monomer_energy_cm"</span>: <span class="n">19906.5</span>, <span class="k">"transition_dipole_D"</span>: <span class="n">11.4</span>, <span class="k">"disorder_sigma_cm"</span>: <span class="n">124.5</span>,
+    <span class="k">"coupling"</span>:   { <span class="k">"model"</span>: "transition_charges", <span class="k">"charges_file"</span>: "data/c8s3_tddft_tresp_S1.txt", <span class="k">"screening"</span>: <span class="n">0.32</span> },
+    <span class="k">"dispersion"</span>: { <span class="k">"enabled"</span>: true, <span class="k">"F_eV"</span>: <span class="n">1.43</span>, <span class="k">"n_aggregate"</span>: <span class="n">1.78</span>, <span class="k">"n_solvent"</span>: <span class="n">1.329</span>, <span class="k">"use_coupling_charges"</span>: true }
+  },
+  <span class="k">"bath"</span>: { <span class="k">"type"</span>: "drude_lorentz", <span class="k">"lambda_cm"</span>: <span class="n">764.0</span>, <span class="k">"cutoff_cm"</span>: <span class="n">572.6</span>, <span class="k">"temperature_K"</span>: <span class="n">295</span>,
+            <span class="k">"modes"</span>: [ { <span class="k">"omega_cm"</span>: <span class="n">1258.6</span>, <span class="k">"huang_rhys"</span>: <span class="n">0.1957</span>, <span class="k">"gamma_cm"</span>: <span class="n">30</span> } ] },
+  <span class="k">"spectrum"</span>: { <span class="k">"wmin_cm"</span>: <span class="n">14500</span>, <span class="k">"wmax_cm"</span>: <span class="n">21500</span>, <span class="k">"nw"</span>: <span class="n">1400</span> }
+}</code></pre></figure>
+<details><summary><code>configurations[]</code> — which aggregates to calculate</summary><table><thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>name</code></td><td>—</td><td>label of the shape; also the name of its results folder</td></tr><tr><td><code>geometry_type</code></td><td>—</td><td>one of the 15 builders (<code>ssp_aggregate --list-geometries</code>)</td></tr><tr><td><code>geometry_params</code></td><td>builder defaults</td><td>numbers specific to the builder (sizes in nm, angles in degrees)</td></tr><tr><td><code>placement.shift_nm, euler_deg, center</code></td><td>0, 0, false</td><td>move and rotate the aggregate relative to the particle at the origin</td></tr></tbody></table></details>
+<details><summary><code>exciton</code> — the molecule, couplings and disorder</summary><table><thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>monomer_energy_cm</code></td><td>17000</td><td>vertical transition energy of the isolated molecule, cm⁻¹</td></tr><tr><td><code>transition_dipole_D</code></td><td>10</td><td>transition dipole, debye</td></tr><tr><td><code>disorder_sigma_cm</code></td><td>60</td><td>standard deviation of the site energies</td></tr><tr><td><code>disorder_corr_length_nm</code></td><td>0</td><td>correlation length ξ of the site energies (0 — uncorrelated)</td></tr><tr><td><code>orientation_jitter_deg, position_jitter_nm</code></td><td>0</td><td>structural disorder, drawn anew in every realisation</td></tr><tr><td><code>relaxation</code></td><td>redfield</td><td><code>redfield</code> or <code>modified_redfield</code></td></tr><tr><td><code>coupling.model</code></td><td>point_dipole</td><td><code>point_dipole</code>, <code>extended_dipole</code>, <code>transition_charges</code>, <code>legacy_J0</code></td></tr><tr><td><code>coupling.screening</code></td><td>1/n²</td><td>factor f<sub>s</sub> multiplying all couplings</td></tr><tr><td><code>coupling.charges_file</code></td><td>—</td><td>TrEsp charges: columns x y z q (nm, molecular frame, x along the dipole)</td></tr><tr><td><code>dispersion.enabled</code></td><td>false</td><td>switch on environment-dependent site shifts</td></tr><tr><td><code>dispersion.F_eV, n_aggregate, n_solvent</code></td><td>1.43, 1.78, n_medium</td><td>Bayliss factor, refractive index of the dye layer and of the monomer's solvent</td></tr><tr><td><code>dispersion.softening_nm, cutoff_nm</code></td><td>0.3, 3.0</td><td>charge softening a₀ and summation radius</td></tr><tr><td><code>dispersion.use_coupling_charges</code></td><td>false</td><td>use the TrEsp charges of the coupling for V<sub>mk</sub></td></tr></tbody></table></details>
+<details><summary><code>bath</code>, <code>decay</code>, <code>pump</code> — line shapes and emission</summary><table><thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>bath.type</code></td><td>drude_lorentz</td><td>or <code>ohmic_exponential</code></td></tr><tr><td><code>bath.lambda_cm, cutoff_cm</code></td><td>50, 100</td><td>reorganisation energy and cut-off of the overdamped part</td></tr><tr><td><code>bath.temperature_K</code></td><td>300</td><td>temperature</td></tr><tr><td><code>bath.modes[]</code></td><td>[]</td><td>vibrational modes: <code>omega_cm</code>, <code>huang_rhys</code>, <code>gamma_cm</code></td></tr><tr><td><code>decay.monomer_lifetime_ns</code></td><td>0</td><td>radiative lifetime of the monomer (0 — from μ and ω)</td></tr><tr><td><code>decay.nonradiative_ps</code></td><td>0</td><td>intrinsic non-radiative rate, ps⁻¹</td></tr><tr><td><code>pump.type, excitation_cm</code></td><td>oscillator_strength</td><td>how the states are populated: by oscillator strength or by a laser line</td></tr></tbody></table></details>
+<details><summary><code>spectrum</code>, <code>ensemble</code>, <code>dynamics</code> — numerics</summary><table><thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>spectrum.wmin_cm, wmax_cm, nw</code></td><td>15500, 18000, 1800</td><td>spectral window and number of points</td></tr><tr><td><code>spectrum.t_max_ps</code></td><td>100</td><td>time window of the line-shape integrals</td></tr><tr><td><code>ensemble.min_realizations, max_realizations</code></td><td>20, 400</td><td>limits of the disorder average</td></tr><tr><td><code>ensemble.rel_tolerance</code></td><td>0.01</td><td>stop when the standard error / peak is below this value</td></tr><tr><td><code>dynamics.enabled, t_max_ps, n_times, initial</code></td><td>true, 20, 200, brightest</td><td>population kinetics</td></tr></tbody></table></details>
+<details><summary><code>nanoparticle</code> — the particle and the hybrid calculation</summary><table><thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>enabled</code></td><td>false</td><td>include a particle centred at the origin</td></tr><tr><td><code>shape</code></td><td>sphere</td><td><code>sphere</code>, <code>prolate</code> (rod), <code>oblate</code> (disk)</td></tr><tr><td><code>semi_axis_xy_nm, semi_axis_z_nm</code></td><td>15, 15</td><td>semi-axes of the metal core</td></tr><tr><td><code>material_file | drude</code></td><td>—</td><td>refractiveindex.info YAML file, or Drude parameters <code>eps_inf, omega_p_eV, gamma_eV</code></td></tr><tr><td><code>n_medium</code></td><td>1.33</td><td>refractive index of the surrounding medium</td></tr><tr><td><code>l_max</code></td><td>40</td><td>highest multipole; the log warns when it is too low</td></tr><tr><td><code>shell_thickness_nm, shell_n</code></td><td>0, 1.45</td><td>ligand / spacer shell (sphere)</td></tr><tr><td><code>d_perp_nm, d_perp_im_nm</code></td><td>0, 0</td><td>Feibelman parameter d⊥ (sphere)</td></tr><tr><td><code>kreibig_A</code></td><td>0</td><td>size-dependent damping, γ = γ<sub>bulk</sub> + A·v<sub>F</sub>/R</td></tr><tr><td><code>size_sigma_rel, size_nodes</code></td><td>0, 5</td><td>relative spread of the core radius and number of quadrature nodes</td></tr><tr><td><code>fast_l</code></td><td>auto</td><td><code>auto</code>, <code>0</code> (exact) or the highest exactly treated multipole</td></tr><tr><td><code>emission</code></td><td>true</td><td>hybrid PL, quantum yield, Purcell factors</td></tr></tbody></table></details>
+<details><summary><code>holstein</code>, <code>heom</code>, <code>scan</code>, <code>monomer_fit</code> — extras</summary><table><thead><tr><th>Key</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>holstein.enabled, omega_cm, huang_rhys, nu_max</code></td><td>false, 1300, 0.6, 4</td><td>vibronic absorption</td></tr><tr><td><code>heom.enabled, depth, matsubara, max_sites</code></td><td>false, 4, 1, 10</td><td>exact reference for small aggregates</td></tr><tr><td><code>scan.parameter, from, to, steps</code></td><td>—</td><td>scan any JSON path, e.g. <code>exciton.disorder_sigma_cm</code></td></tr><tr><td><code>monomer_fit.absorption_file, emission_file</code></td><td>—</td><td>calibration run: spectra, units, start values, fit flags</td></tr></tbody></table></details>
+
+<h2 id="build">Build and run</h2>
+<div class="tabs" role="tablist">
+  <button class="tab" role="tab" aria-selected="true" data-tab="linux">Linux</button>
+  <button class="tab" role="tab" aria-selected="false" data-tab="mac">macOS</button>
+  <button class="tab" role="tab" aria-selected="false" data-tab="win">Windows</button>
+</div>
+<div class="tabpanel" data-panel="linux">
+<p>Needs a C++20 compiler, CMake ≥ 3.24, Qt ≥ 6.5 (Widgets, Concurrent, Svg), Eigen ≥ 3.4, FFTW 3; GoogleTest for the tests.</p>
+<figure class="code"><figcaption>shell</figcaption><pre><code>cd software
+scripts/build.sh                 <span class="c"># configure + build (Release)</span>
+ctest --test-dir build           <span class="c"># 61 tests</span>
+build/gui/ssp_gui                <span class="c"># start the interface</span></code></pre></figure></div>
+<div class="tabpanel" data-panel="mac" hidden>
+<p>Needs the Xcode command-line tools and Homebrew. The script installs the dependencies, builds, bundles Qt into the app, signs it ad hoc and writes a zip. The app has no Apple developer signature: on another Mac use right-click → Open at first launch. <i>This script has not been run on real hardware yet.</i></p>
+<figure class="code"><figcaption>shell</figcaption><pre><code>xcode-select --install
+cd software
+bash packaging/macos/build_macos.sh
+open packaging/out/ssp-macos-$(uname -m)/ssp_gui.app</code></pre></figure></div>
+<div class="tabpanel" data-panel="win" hidden>
+<p>The tested route is a cross-build in Docker (from Linux, macOS, or Windows with WSL 2). It produces <code>ssp-windows-x64.zip</code> with the programs, all DLLs and the examples — extract and start <code>ssp_gui.exe</code>.</p>
+<figure class="code"><figcaption>shell</figcaption><pre><code>cd software
+packaging/windows/build_windows.sh        <span class="c"># result: packaging/out/ssp-windows-x64.zip</span></code></pre></figure>
+<p>Native build in an MSYS2 UCRT64 shell (<i>not tested yet</i>):</p>
+<figure class="code"><figcaption>shell</figcaption><pre><code>pacman -S mingw-w64-ucrt-x86_64-{gcc,cmake,ninja,qt6-base,qt6-svg,eigen3,fftw,pkgconf}
+cmake -S software -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DSSP_BUILD_TESTS=OFF
+cmake --build build &amp;&amp; windeployqt6 build/gui/ssp_gui.exe</code></pre></figure></div>
+<p class="note">Command line: <code>ssp_aggregate config.json</code> runs a calculation, a scan or a calibration; <code>ssp_aggregate --huckel-tresp molecule.xyz charges.txt 1</code> makes transition charges; <code>ssp_benchmark purcell Au.yml out.csv</code> compares decay rates with exact Mie theory.</p>
+
+<h2 id="validation">Validation</h2>
+<p class="lead">Each block is tested against an independent reference. Where the model has a limit, the limit is measured and stated.</p>
+<div class="tablewrap"><table><thead><tr><th>Block</th><th>Reference</th><th>Agreement</th></tr></thead><tbody>
+<tr><td>Line shapes</td><td>analytic Drude g(t); detailed balance; HEOM for a monomer</td><td>&lt; 1 %</td></tr>
+<tr><td>Redfield kinetics</td><td>Boltzmann equilibrium; HEOM for a dimer</td><td>0.03 in population</td></tr>
+<tr><td>Modified Redfield</td><td>Redfield limit; detailed balance; HEOM at λ ≈ J</td><td>3 %; 0.5 %; closer than Redfield</td></tr>
+<tr><td>Layered sphere</td><td>homogeneous limits to l = 60; Gersten–Nitzan series to l = 90</td><td>10⁻⁶</td></tr>
+<tr><td>Aggregate + particle</td><td>transparent particle → bare aggregate spectrum</td><td>&lt; 1 %</td></tr>
+<tr><td>Coupling strength g</td><td>analytic Drude sphere</td><td>2 %</td></tr>
+<tr><td>Decay near a gold sphere</td><td>exact Mie theory for a dipole</td><td>R ≤ 10 nm: 1–3 % (total), ≤ 10 % (radiative); R = 20 nm: 7–23 %</td></tr>
+<tr><td>Fast solver</td><td>exact solver, 300 molecules</td><td>0.2–0.7 %</td></tr>
+<tr><td>Monomer fit</td><td>synthetic spectra with known parameters</td><td>within 1–2 σ</td></tr>
+<tr><td>C8S3 nanotube J-band</td><td>measured spectrum, no fit to the aggregate</td><td>+100…+200 cm⁻¹ of a −2200 cm⁻¹ shift</td></tr>
+</tbody></table></div>
+<div class="shots" style="margin-top:14px">
+  <figure><img loading="lazy" src="demo/figures/fig6_decay_vs_mie.png" alt="Quantum yield near a gold sphere: model and exact Mie theory"><figcaption>Quantum yield of a molecule near a gold sphere: model (lines) and exact Mie theory (circles).</figcaption></figure>
+  <figure><img loading="lazy" src="demo/figures/fig7_heom.png" alt="Populations: HEOM and Redfield"><figcaption>Exciton relaxation in a six-molecule chain: HEOM and Redfield theory.</figcaption></figure>
+</div>
+
+<h2 id="roadmap">Roadmap</h2>
+<div class="road">
+  <div><b>Uncertainty budget</b>Propagate the spread of the inputs (F, n, μ, structure, bath) to positions and widths.</div>
+  <div><b>Band widths</b>Periodic boundary conditions along tubes; contributions to the J-band width.</div>
+  <div><b>Larger particles</b>Higher-multipole radiation, retardation inside the particle, shells on spheroids.</div>
+  <div><b>Vibronic fluorescence</b>Two-particle states in the Holstein model.</div>
+  <div><b>Quantum chemistry in the loop</b>A general geometry → TD-DFT → transition-charges pipeline.</div>
+  <div><b>More spectroscopies</b>Raman, Brillouin, pump–probe and two-dimensional spectra.</div>
+  <div><b>Bayesian calibration</b>Posterior parameters, residual analysis, latent variables.</div>
+  <div><b>Atomistic structures</b>Aggregates on particle surfaces from molecular dynamics.</div>
+</div>
+<footer>SSP Nano guide · generated by <code>docs/guide/build_guide.js</code> · formulas are native MathML (no external scripts). Data used in the examples: Doria et al. 2022, Kuevda et al. 2025, Bondarenko et al. 2020 (all CC BY 4.0); gold optical constants from refractiveindex.info (CC0).</footer>
+</main>
+</div>
+<script>
+var MAP = [{"stage":"Inputs","items":[["JSON configuration","done","Strict parser: unknown keys are errors; paths relative to the config.","A reproducible description of one calculation.","config"],["Aggregate geometry","done","15 parametric builders (chains, rings, tubes, sheets, shell on a particle, seamless brickwork tube).","Positions, transition-dipole directions and molecular frames.","geometry"],["Optical constants of metals","done","refractiveindex.info YAML tables (PCHIP interpolation), Drude model, Kreibig size damping.","ε(ω) of the particle.","sphere"],["Transition charges from a geometry","done","Hückel π-electron model: q ∝ c(HOMO)·c(LUMO).","A TrEsp charge file for couplings and dispersion shifts.","tresp"],["Transition charges from TD-DFT","partial","PySCF helper script (CAM-B3LYP, TDA, ESP fit). Works, but is a per-molecule script, not yet a general pipeline.","Higher-quality TrEsp charges.","tresp"],["Experimental spectra","done","Two- or three-column tables in nm, cm⁻¹ or eV.","Data for calibration and comparison.","calibration"],["Atomistic structures (MD)","planned","Aggregates on particle surfaces from molecular dynamics.","Realistic structural disorder.",null]]},{"stage":"Exciton model","items":[["Frenkel Hamiltonian","done","One-exciton block, dense diagonalisation (Eigen).","Exciton energies, wave functions, transition dipoles, participation factors.","hamiltonian"],["Excitonic couplings","done","Point dipole, extended dipole, atomic transition charges (TrEsp), screening factor.","The coupling matrix J.","coupling"],["Disorder","done","Gaussian site disorder; spatial correlations via Cholesky factor; orientation/position jitter.","An ensemble of realisations with error bars.","disorder"],["Dispersive site shifts","done","ΔE = Q·ΣV², calibrated to the Bayliss continuum shift (Megow et al.).","Environment-dependent site energies — the main source of the J-band red shift in C8S3.","dispersion"],["Periodic boundary conditions","planned","Infinite tubes without end effects.","Cleaner band widths.",null],["Charge-transfer states","planned","Beyond the Frenkel picture.","Tightly packed dyes.",null]]},{"stage":"Line shapes and dynamics","items":[["Line-shape function g(t)","done","Analytic Matsubara series for the Drude bath; FFT for vibrational modes.","Input of all line shapes and of modified Redfield theory.","bath"],["Cumulant spectra","done","Second-order cumulant, secular; exchange narrowing through the participation factor.","Absorption and fluorescence line shapes.","lineshape"],["Redfield relaxation","done","Secular rates between exciton states; detailed balance.","Kinetics, steady state, lifetime broadening.","redfield"],["Modified Redfield","done","Diagonal exciton–phonon coupling non-perturbative. Practical for N ≲ 300.","Better rates when λ ~ J.","modredfield"],["HEOM reference","done","Hierarchical equations of motion, Drude bath, small aggregates.","Numerically exact benchmark for spectra and populations.","heom"],["Vibronic absorption (Holstein)","done","One-particle approximation, one mode per molecule.","Vibronic band structure of J- and H-aggregates.","holstein"],["Vibronic fluorescence","planned","Two-particle states.","0–0 / 0–1 emission ratios.",null],["2D and pump–probe spectra","planned","Third-order response.","Comparison with ultrafast experiments.",null],["Raman and Brillouin spectra","planned","Vibrational and acoustic response of particles.","Phonon spectroscopy.",null]]},{"stage":"Nanoparticle","items":[["Mie theory","done","Homogeneous and coated spheres (stable recurrences).","Exact cross sections of the bare particle.","sphere"],["Quasi-static multipoles","done","Sphere and prolate/oblate spheroids up to l = 120.","The induced field at every molecule.","sphere"],["Ligand shell and Feibelman d⊥","partial","Layered-sphere boundary conditions. Spheres only; not yet for spheroids.","Spacer layers and quantum surface response.","layered"],["Retardation corrections","done","Exact Mie factors for l ≤ 8 (sphere); MLWA for spheroids.","Radiation damping and dynamic depolarisation.","mlwa"],["Size distribution","done","Gauss–Hermite average over the core radius.","Inhomogeneous plasmon broadening.","sphere"],["Large particles (R ≳ 20 nm)","planned","Radiation of higher multipoles, retardation inside the particle.","Accurate decay rates for big particles.",null],["Arbitrary shapes, dimers, substrates","planned","BEM / DDA back end.","Gaps and hot spots.",null]]},{"stage":"Coupled system","items":[["Aggregate + particle response","done","Linear response in the exciton basis with the cumulant resolvent.","Extinction, absorption, scattering of the hybrid.","response"],["Fast solver","done","Woodbury identity for low multipoles, diagonal treatment of high ones.","~10³ molecules in minutes.","woodbury"],["Coupling strength g","done","From the pole of the dipolar plasmon mode — no peak fitting.","g, cooperativity, strong-coupling criteria.","strong"],["Coupled-oscillator analysis","done","Branch fit with confidence interval and a 'resolved' flag.","Anticrossing maps from parameter scans.","strong"],["Decay near the particle","done","Radiation through the particle + absorption in the metal. Accurate for R ≤ 10 nm.","Purcell factor, quenching, quantum yield, hybrid PL.","decay"]]},{"stage":"Calibration and validation","items":[["Monomer calibration","done","Joint fit of absorption and PL; moments start, multi-start, Levenberg–Marquardt.","E₀, bath, static width, μ, radiative lifetime.","calibration"],["Comparison with experiment","done","Scale / baseline / shift fit, residuals, χ², Durbin–Watson.","A check of what the model misses.","calibration"],["Benchmarks","done","Exact Mie theory for a dipole near a sphere; datasheet extinction of gold.","Measured accuracy of each block.","decay"],["Parameter scans","done","Any JSON key; maps and observables vs the scanned value.","Trends and sensitivity.","config"],["J-band prediction (C8S3)","partial","No fit to the aggregate: +100…+200 cm⁻¹ from experiment; band width depends on disorder.","A test of the whole chain.","dispersion"],["Uncertainty budget","planned","Propagation of input uncertainties.","Error bars on predictions.",null],["Bayesian calibration","planned","Posterior over model parameters, latent variables.","Systematic model improvement.",null]]}];
+var LABEL = {done:["Implemented","\u2713"],partial:["Partly implemented","\u25D0"],planned:["Not implemented yet","\u25CB"]};
+// Client script of the guide: program map, filters, tabs, theme switch and three small calculators.
+(function () {
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var el = function (tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  var css = function (v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); };
+
+  // ---------------- program map
+  var grid = $("#mapgrid"), detail = $("#detail"), counts = { all: 0, done: 0, partial: 0, planned: 0 }, current = null;
+  MAP.forEach(function (st) {
+    var box = el("section", "stage"), h = el("h4", null, st.stage), n = el("span");
+    h.appendChild(n); box.appendChild(h);
+    var doneN = 0;
+    st.items.forEach(function (it) {
+      var b = el("button", "node " + it[1]);
+      b.type = "button"; b.dataset.status = it[1]; b.setAttribute("aria-expanded", "false");
+      var dot = el("span", "dot", LABEL[it[1]][1]); dot.title = LABEL[it[1]][0];
+      b.appendChild(dot); b.appendChild(el("span", null, it[0]));
+      b.addEventListener("click", function () { show(it, b); });
+      box.appendChild(b);
+      counts.all++; counts[it[1]]++; if (it[1] === "done") doneN++;
+    });
+    n.textContent = doneN + "/" + st.items.length;
+    n.title = "implemented / total";
+    grid.appendChild(box);
+  });
+  ["all", "done", "partial", "planned"].forEach(function (k) { $("#c-" + k).textContent = "(" + counts[k] + ")"; });
+
+  function show(it, btn) {
+    if (current) current.setAttribute("aria-expanded", "false");
+    current = btn; btn.setAttribute("aria-expanded", "true");
+    detail.textContent = "";
+    var h = el("h4", null, it[0]), bd = el("span", "badge " + it[1]);
+    bd.appendChild(el("i", null, LABEL[it[1]][1])); bd.appendChild(document.createTextNode(LABEL[it[1]][0]));
+    h.appendChild(bd); detail.appendChild(h);
+    var dl = el("dl");
+    dl.appendChild(el("dt", null, "Method")); dl.appendChild(el("dd", null, it[2]));
+    dl.appendChild(el("dt", null, "Gives")); dl.appendChild(el("dd", null, it[3]));
+    if (it[4]) {
+      dl.appendChild(el("dt", null, "Details"));
+      var dd = el("dd"), a = el("a", null, "formulas and code →");
+      a.href = (it[4] === "config" || it[4] === "geometry") ? "#config" : "#m-" + it[4];
+      dd.appendChild(a); dl.appendChild(dd);
+    }
+    detail.appendChild(dl);
+  }
+  document.querySelectorAll(".chip").forEach(function (c) {
+    c.addEventListener("click", function () {
+      document.querySelectorAll(".chip").forEach(function (x) { x.setAttribute("aria-pressed", String(x === c)); });
+      var f = c.dataset.f;
+      document.querySelectorAll(".node").forEach(function (n) { n.hidden = !(f === "all" || n.dataset.status === f); });
+    });
+  });
+
+  // ---------------- tabs
+  document.querySelectorAll(".tab").forEach(function (t) {
+    t.addEventListener("click", function () {
+      document.querySelectorAll(".tab").forEach(function (x) { x.setAttribute("aria-selected", String(x === t)); });
+      document.querySelectorAll(".tabpanel").forEach(function (p) { p.hidden = p.dataset.panel !== t.dataset.tab; });
+    });
+  });
+
+  // ---------------- theme
+  var redraws = [];
+  $("#theme").addEventListener("click", function () {
+    var root = document.documentElement, dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    redraws.forEach(function (f) { f(); });
+  });
+
+  // ---------------- calculators
+  function widget(slot, title, sliders, draw) {
+    var w = el("div", "widget"), left = el("div"), right = el("div");
+    w.appendChild(el("h5", null, title));
+    var vals = {}, outs = {};
+    sliders.forEach(function (s) {
+      var lab = el("label"), out = el("output"), inp = el("input");
+      lab.appendChild(el("span", null, s.label)); lab.appendChild(out);
+      inp.type = "range"; inp.min = s.min; inp.max = s.max; inp.step = s.step; inp.value = s.value;
+      inp.setAttribute("aria-label", s.label);
+      lab.appendChild(inp); left.appendChild(lab);
+      vals[s.key] = s.value; outs[s.key] = [out, s];
+      inp.addEventListener("input", function () { vals[s.key] = parseFloat(inp.value); update(); });
+    });
+    var read = el("div", "readout"); left.appendChild(read);
+    var cv = el("canvas"); cv.setAttribute("role", "img"); cv.setAttribute("aria-label", title); right.appendChild(cv);
+    w.appendChild(left); w.appendChild(right); slot.appendChild(w);
+    function update() {
+      Object.keys(outs).forEach(function (k) { outs[k][0].textContent = vals[k].toFixed(outs[k][1].digits) + " " + outs[k][1].unit; });
+      var r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+      cv.width = Math.max(200, r.width * d); cv.height = Math.max(120, r.height * d);
+      var g = cv.getContext("2d"); g.setTransform(d, 0, 0, d, 0, 0); g.clearRect(0, 0, r.width, r.height);
+      g.font = "12px system-ui, sans-serif";
+      draw(vals, g, r.width, r.height, read, { ink: css("--ink"), ink2: css("--ink2"), line: css("--line"), a: css("--accent"), b: css("--accent2"), ok: css("--done") });
+    }
+    redraws.push(update); window.addEventListener("resize", update); update();
+  }
+  function axes(g, W, H, C, x0, x1, y0, y1, xl, yl) {
+    var L = 66, R = 16, T = 12, B = 34;
+    var X = function (x) { return L + (x - x0) / (x1 - x0) * (W - L - R); }, Y = function (y) { return H - B - (y - y0) / (y1 - y0) * (H - T - B); };
+    g.strokeStyle = C.line; g.lineWidth = 1; g.strokeRect(L, T, W - L - R, H - T - B);
+    g.fillStyle = C.ink2; g.textAlign = "center"; g.fillText(xl, (L + W - R) / 2, H - 6);
+    g.save(); g.translate(12, (T + H - B) / 2); g.rotate(-Math.PI / 2); g.fillText(yl, 0, 0); g.restore();
+    for (var i = 0; i <= 4; i++) {
+      var xv = x0 + (x1 - x0) * i / 4, yv = y0 + (y1 - y0) * i / 4;
+      g.textAlign = i === 0 ? "left" : i === 4 ? "right" : "center"; g.fillText(Math.round(xv), X(xv), H - B + 14);
+      g.textAlign = "right"; g.fillText(Math.round(yv), L - 5, Y(yv) + 4);
+    }
+    return { X: X, Y: Y };
+  }
+  function curve(g, P, f, x0, x1, col, dash) {
+    g.beginPath(); g.setLineDash(dash || []);
+    for (var i = 0; i <= 200; i++) { var x = x0 + (x1 - x0) * i / 200, y = f(x); if (i) g.lineTo(P.X(x), P.Y(y)); else g.moveTo(P.X(x), P.Y(y)); }
+    g.strokeStyle = col; g.lineWidth = 2; g.stroke(); g.setLineDash([]);
+  }
+
+  // 1. point-dipole coupling of two parallel dipoles
+  var s1 = $('[data-widget="w-coupling"]');
+  if (s1) widget(s1, "Try it: coupling of two parallel transition dipoles", [
+    { key: "r", label: "distance r", min: 0.4, max: 3, step: 0.05, value: 1.0, digits: 2, unit: "nm" },
+    { key: "th", label: "angle θ between dipoles and the line joining them", min: 0, max: 90, step: 1, value: 20, digits: 0, unit: "°" },
+    { key: "mu", label: "transition dipole μ", min: 1, max: 20, step: 0.5, value: 10, digits: 1, unit: "D" },
+    { key: "fs", label: "screening f_s", min: 0.2, max: 1, step: 0.02, value: 1, digits: 2, unit: "" }],
+  function (v, g, W, H, read, C) {
+    var J = function (th) { var c = Math.cos(th * Math.PI / 180); return v.fs * 5.034 * v.mu * v.mu * (1 - 3 * c * c) / Math.pow(v.r, 3); };
+    var m = Math.max(Math.abs(J(0)), Math.abs(J(90)), 1);
+    var P = axes(g, W, H, C, 0, 90, -m, m, "θ, degrees", "J, cm⁻¹");
+    g.strokeStyle = C.ink2; g.setLineDash([3, 3]); g.beginPath(); g.moveTo(P.X(0), P.Y(0)); g.lineTo(P.X(90), P.Y(0)); g.moveTo(P.X(54.7), P.Y(-m)); g.lineTo(P.X(54.7), P.Y(m)); g.stroke(); g.setLineDash([]);
+    g.fillStyle = C.ink2; g.textAlign = "left"; g.fillText("magic angle 54.7°", P.X(54.7) + 4, P.Y(m) + 14);
+    curve(g, P, J, 0, 90, C.a);
+    var j = J(v.th); g.fillStyle = C.b; g.beginPath(); g.arc(P.X(v.th), P.Y(j), 5, 0, 7); g.fill();
+    read.innerHTML = "J = <b>" + j.toFixed(0) + " cm⁻¹</b> — " + (j < 0 ? "J-type: head-to-tail, red-shifted bright band" : "H-type: side-by-side, blue-shifted bright band");
+  });
+
+  // 2. coupled oscillators
+  var s2 = $('[data-widget="w-anticross"]');
+  if (s2) widget(s2, "Try it: plasmon–exciton anticrossing and the strong-coupling criteria", [
+    { key: "g", label: "coupling g", min: 0, max: 1500, step: 10, value: 300, digits: 0, unit: "cm⁻¹" },
+    { key: "gp", label: "plasmon width γp (FWHM)", min: 200, max: 3000, step: 20, value: 1600, digits: 0, unit: "cm⁻¹" },
+    { key: "gx", label: "exciton width γx (FWHM)", min: 50, max: 1500, step: 10, value: 400, digits: 0, unit: "cm⁻¹" }],
+  function (v, g, W, H, read, C) {
+    var wp = 19200, x0 = 17000, x1 = 21400;
+    var br = function (wx, sgn) {
+      var hr = 0.5 * (wp - wx), hi = -0.25 * (v.gp - v.gx);
+      var re = v.g * v.g + hr * hr - hi * hi, imv = 2 * hr * hi, mod = Math.sqrt(re * re + imv * imv);
+      var sr = Math.sqrt(Math.max(0, (mod + re) / 2));
+      return 0.5 * (wp + wx) + sgn * sr;
+    };
+    var P = axes(g, W, H, C, x0, x1, 16400, 22000, "exciton energy, cm⁻¹", "hybrid modes, cm⁻¹");
+    curve(g, P, function () { return wp; }, x0, x1, C.ink2, [4, 4]);
+    curve(g, P, function (x) { return x; }, x0, x1, C.ink2, [4, 4]);
+    curve(g, P, function (x) { return br(x, 1); }, x0, x1, C.a);
+    curve(g, P, function (x) { return br(x, -1); }, x0, x1, C.b);
+    var vis = 2 * v.g > 0.5 * (v.gp + v.gx), anti = v.g > Math.abs(v.gp - v.gx) / 4, coop = 4 * v.g * v.g / (v.gp * v.gx);
+    read.innerHTML = "2g = <b>" + (2 * v.g).toFixed(0) + "</b> vs (γp+γx)/2 = <b>" + (0.5 * (v.gp + v.gx)).toFixed(0) + "</b> → splitting " + (vis ? "<b>visible</b>" : "not visible") +
+      "<br>anticrossing: <b>" + (anti ? "yes" : "no") + "</b> · cooperativity C = <b>" + coop.toFixed(2) + "</b> → " + (vis ? "strong coupling" : anti ? "intermediate coupling" : "weak coupling");
+  });
+
+  // 3. dispersive site energy
+  var s3 = $('[data-widget="w-shift"]');
+  if (s3) widget(s3, "Try it: where does a molecule absorb inside an aggregate?", [
+    { key: "F", label: "Bayliss factor F", min: 0.5, max: 2.5, step: 0.01, value: 1.43, digits: 2, unit: "eV" },
+    { key: "na", label: "refractive index of the dye layer", min: 1.3, max: 2.2, step: 0.01, value: 1.78, digits: 2, unit: "" },
+    { key: "ns", label: "refractive index of the monomer's solvent", min: 1.0, max: 1.7, step: 0.01, value: 1.33, digits: 2, unit: "" },
+    { key: "s", label: "local packing ΣV² / ⟨ΣV²⟩ (1 = continuum)", min: 0.3, max: 1.6, step: 0.01, value: 1.0, digits: 2, unit: "" }],
+  function (v, g, W, H, read, C) {
+    var f = function (n) { return (n * n - 1) / (2 * n * n + 1); }, E0 = 19900, eV = 8065.544;
+    var gas = E0 + v.F * f(v.ns) * eV, agg = gas - v.s * v.F * f(v.na) * eV;
+    var lo = 15000, hi = 23500, L = 60, Rr = 20, Y = function (e) { return H - 28 - (e - lo) / (hi - lo) * (H - 50); };
+    var cols = [["monomer in solvent", E0, C.ink2], ["gas phase", gas, C.a], ["in the aggregate", agg, C.b]], cw = (W - L - Rr) / 3;
+    g.strokeStyle = C.line; g.beginPath(); g.moveTo(L - 10, Y(lo)); g.lineTo(L - 10, Y(hi)); g.stroke();
+    g.fillStyle = C.ink2; g.textAlign = "right";
+    for (var e = 16000; e <= 23000; e += 1000) g.fillText(e, L - 14, Y(e) + 4);
+    cols.forEach(function (c, i) {
+      var x = L + i * cw + 10, y = Y(Math.min(hi, Math.max(lo, c[1])));
+      g.strokeStyle = c[2]; g.lineWidth = 3; g.beginPath(); g.moveTo(x, y); g.lineTo(x + cw - 20, y); g.stroke();
+      g.fillStyle = C.ink; g.textAlign = "center"; g.fillText(Math.round(c[1]) + " cm⁻¹", x + (cw - 20) / 2, y - 7);
+      g.fillStyle = C.ink2; g.fillText(c[0], x + (cw - 20) / 2, H - 8);
+    });
+    read.innerHTML = "back to the gas phase: <b>+" + (gas - E0).toFixed(0) + " cm⁻¹</b> · dispersive shift: <b>" + (agg - gas).toFixed(0) + " cm⁻¹</b><br>net shift of the site energy: <b>" + (agg - E0).toFixed(0) + " cm⁻¹</b> → " + (1e7 / agg).toFixed(0) + " nm";
+  });
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "_comment": "Step 1: calibrate the monomer on measured absorption + PL (methanol).",
+  "monomer_fit": {
+    "absorption_file": "data/monomer_abs_methanol.csv",
+    "absorption_unit": "nm",
+    "absolute_extinction": false,
+    "emission_file": "data/monomer_pl_methanol_digitized.csv",
+    "emission_unit": "nm",
+    "emission_per_wavelength": true,
+    "n_medium": 1.329,
+    "temperature_K": 295,
+    "start": {
+      "cutoff_cm": 100,
+      "modes": [
+        {
+          "omega_cm": 1250,
+          "huang_rhys": 0.2,
+          "gamma_cm": 30
+        }
+      ]
+    },
+    "fit": {
+      "mode_omega": true
+    },
+    "output_dir": "results/1_monomer_calibration"
+  }
+}

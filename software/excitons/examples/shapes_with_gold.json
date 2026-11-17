@@ -1,0 +1,169 @@
+{
+    "_comment": "Сравнение форм агрегата (точечные диполи, расстояния ≥ 1.2 нм) и их связь с золотой наносферой R = 15 нм (зазор ≥ 5 нм).",
+    "bath": {
+        "cutoff_cm": 120,
+        "lambda_cm": 50,
+        "temperature_K": 300,
+        "type": "drude_lorentz"
+    },
+    "configurations": [
+        {
+            "geometry_params": {
+                "N": 24,
+                "dipole_angle_deg": 0,
+                "spacing": 1.3
+            },
+            "geometry_type": "linear_chain",
+            "name": "chain_J",
+            "placement": {
+                "center": true,
+                "euler_deg": [
+                    0,
+                    0,
+                    0
+                ],
+                "shift_nm": [
+                    0,
+                    0,
+                    22
+                ]
+            }
+        },
+        {
+            "geometry_params": {
+                "N": 24,
+                "radius": 5,
+                "tilt_deg": 0
+            },
+            "geometry_type": "ring",
+            "name": "ring",
+            "placement": {
+                "center": true,
+                "euler_deg": [
+                    0,
+                    0,
+                    0
+                ],
+                "shift_nm": [
+                    0,
+                    0,
+                    22
+                ]
+            }
+        },
+        {
+            "geometry_params": {
+                "dipole_angle_deg": 0,
+                "n_x": 8,
+                "slip_x": 0.65,
+                "spacing_x": 1.3,
+                "spacing_y": 1.4
+            },
+            "geometry_type": "brick_layer_sheet",
+            "name": "brick_sheet",
+            "placement": {
+                "center": true,
+                "euler_deg": [
+                    0,
+                    0,
+                    0
+                ],
+                "shift_nm": [
+                    0,
+                    0,
+                    22
+                ]
+            }
+        },
+        {
+            "geometry_params": {
+                "N": 30,
+                "n_turns": 3
+            },
+            "geometry_type": "helix",
+            "name": "helix",
+            "placement": {
+                "center": true,
+                "euler_deg": [
+                    0,
+                    0,
+                    0
+                ],
+                "shift_nm": [
+                    0,
+                    0,
+                    30
+                ]
+            }
+        }
+    ],
+    "decay": {
+        "monomer_lifetime_ns": 3,
+        "nonradiative_ps": 5e-04
+    },
+    "dynamics": {
+        "enabled": true,
+        "initial": "brightest",
+        "n_times": 200,
+        "t_max_ps": 5
+    },
+    "ensemble": {
+        "max_realizations": 512,
+        "min_realizations": 32,
+        "rel_tolerance": 0.02,
+        "seed": 7
+    },
+    "exciton": {
+        "coupling": {
+            "J0_cm": 900,
+            "dipole_length_nm": 0.8,
+            "model": "point_dipole",
+            "r0_nm": 1,
+            "screening": 1
+        },
+        "disorder_sigma_cm": 100,
+        "monomer_energy_cm": 17000,
+        "n_medium": 1.33,
+        "transition_dipole_D": 8
+    },
+    "heom": {
+        "absorption": true,
+        "depth": 4,
+        "dt_fs": 0,
+        "enabled": false,
+        "initial": "brightest",
+        "matsubara": 1,
+        "max_sites": 10,
+        "populations": true,
+        "t_max_ps": 1,
+        "terminator": true
+    },
+    "nanoparticle": {
+        "dynamic_dipole": true,
+        "enabled": true,
+        "homogeneous_hwhm_cm": -1,
+        "kreibig_A": 0,
+        "l_max": 50,
+        "material_file": "../../../data/reference/optical_constants/refractiveindex.info-database/database/data/main/Au/nk/Johnson.yml",
+        "n_medium": 1.33,
+        "near_field_cm": 17000,
+        "nw": 500,
+        "realizations": 24,
+        "semi_axis_xy_nm": 11,
+        "semi_axis_z_nm": 15,
+        "shape": "oblate",
+        "wmax_cm": 22000,
+        "wmin_cm": 14000
+    },
+    "output_dir": "results/shapes_with_gold",
+    "pump": {
+        "excitation_cm": 17800,
+        "type": "laser"
+    },
+    "spectrum": {
+        "nw": 2000,
+        "t_max_ps": 100,
+        "wmax_cm": 19000,
+        "wmin_cm": 15000
+    }
+}

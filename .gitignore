@@ -1,0 +1,42 @@
+# --- copyrighted books/papers: never commit
+/books and articles/
+
+# --- large downloaded reference data (re-fetch with software/data_fetch/*.sh)
+/data/reference/
+# raw third-party archives (re-download by DOI, see the README.md in each folder)
+/data/experiment/doria2022_c8s3_nanotubes/raw/
+/data/experiment/doria2022_c8s3_nanotubes/extracted/
+
+# --- build trees and packages
+/software/build/
+/software/build-*/
+/software/packaging/out/
+/software/packaging/*.log
+
+# --- quantum-chemistry environments (recreate: python -m venv, micromamba; see software/qc/README.md)
+/software/qc/venv/
+/software/qc/nwchem-env/
+/software/qc/mamba/
+/software/qc/bin/
+
+# --- calculation results (reproducible from the configs)
+/software/excitons/examples/results/
+/software/excitons/examples/**/results/
+/data/results/c8s3_tube_prediction/
+/data/results/c8s3_tube_prediction_nodisp/
+/data/results/c8s3_tube_v2/
+/data/results/calibration_c8s3_monomer_with_pl_2modes/
+/data/results/calibration_c8s3_monomer_with_pl_omega/
+
+# --- tooling noise
+.claude/
+node_modules/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+*.swp
+
+# quantum-chemistry run logs (contain local paths and host names)
+/data/experiment/**/pyscf.log
+/data/experiment/**/run.txt

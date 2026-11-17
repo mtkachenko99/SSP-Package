@@ -1,0 +1,20 @@
+{
+    "bath": {
+        "cutoff_cm": 572.6068081515584,
+        "lambda_cm": 763.9922708617311,
+        "modes": [
+            {
+                "gamma_cm": 30,
+                "huang_rhys": 0.19566384067661416,
+                "omega_cm": 1258.6442036244307
+            }
+        ],
+        "temperature_K": 295,
+        "type": "drude_lorentz"
+    },
+    "exciton": {
+        "_disorder_hint": "monomer static broadening σ_inh = 124.5 cm⁻¹ — upper bound for the site disorder",
+        "monomer_energy_cm": 19906.546184691426,
+        "n_medium": 1.329
+    }
+}

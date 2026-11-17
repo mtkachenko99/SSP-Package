@@ -1,0 +1,27 @@
+{
+  "_comment": "C8S3 monomer in methanol: absorption (Doria et al. 2022, measured) + PL digitized from Fig. 1c of Kuevda et al. JACS 2025 (CC BY 4.0). Same dye and solvent; absorption maxima agree (520 nm). Mode frequency is fitted (single mode: chi2 1.9; two modes: 1.8 with strongly correlated parameters — not used).",
+  "monomer_fit": {
+    "absorption_file": "processed/monomer_abs_methanol.csv",
+    "absorption_unit": "nm",
+    "absolute_extinction": false,
+    "emission_file": "../c8s3_monomer_pl_kuevda2025/processed/monomer_pl_methanol_digitized.csv",
+    "emission_unit": "nm",
+    "emission_per_wavelength": true,
+    "n_medium": 1.329,
+    "temperature_K": 295,
+    "start": {
+      "cutoff_cm": 100,
+      "modes": [
+        {
+          "omega_cm": 1250,
+          "huang_rhys": 0.2,
+          "gamma_cm": 30
+        }
+      ]
+    },
+    "output_dir": "../../results/calibration_c8s3_monomer_with_pl",
+    "fit": {
+      "mode_omega": true
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "_comment": "Малые агрегаты: сравнение кумулянт+Редфилд с численно точным HEOM.",
+  "output_dir": "results/heom_benchmark",
+  "configurations": [
+    {"name": "ring6", "geometry_type": "ring", "geometry_params": {"N": 6, "radius": 1.5, "tilt_deg": 0.0}},
+    {"name": "chain6", "geometry_type": "linear_chain", "geometry_params": {"N": 6, "spacing": 1.0, "dipole_angle_deg": 0.0}}
+  ],
+  "exciton": {"monomer_energy_cm": 17000.0, "transition_dipole_D": 6.0, "disorder_sigma_cm": 50.0,
+              "coupling": {"model": "point_dipole", "screening": 1.0}},
+  "bath": {"type": "drude_lorentz", "lambda_cm": 35.0, "cutoff_cm": 106.0, "temperature_K": 300.0},
+  "decay": {"nonradiative_ps": 0.001},
+  "spectrum": {"wmin_cm": 16000.0, "wmax_cm": 18000.0, "nw": 800, "t_max_ps": 60.0},
+  "ensemble": {"min_realizations": 16, "max_realizations": 64, "seed": 3},
+  "dynamics": {"enabled": false},
+  "heom": {"enabled": true, "matsubara": 1, "depth": 4, "t_max_ps": 1.0, "max_sites": 8,
+           "absorption": true, "populations": true, "initial": "highest"}
+}

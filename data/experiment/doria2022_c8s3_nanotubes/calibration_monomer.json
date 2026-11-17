@@ -1,0 +1,17 @@
+{
+  "_comment": "Calibration on the measured C8S3 monomer absorption (methanol, RT; Doria et al. 2022). Absorbance only (no concentration → no absolute ε, μ not determined). The monomer PL file of the dataset does not contain the emission band (range ends at 550 nm, dominated by a narrow line near 600 nm) and is not used.",
+  "monomer_fit": {
+    "absorption_file": "processed/monomer_abs_methanol.csv",
+    "absorption_unit": "nm",
+    "absolute_extinction": false,
+    "n_medium": 1.329,
+    "temperature_K": 295,
+    "start": {
+      "cutoff_cm": 100,
+      "lambda_cm": 150,
+      "sigma_inh_cm": 300,
+      "modes": [{"omega_cm": 1150, "huang_rhys": 0.4, "gamma_cm": 30}]
+    },
+    "output_dir": "../../results/calibration_c8s3_monomer"
+  }
+}

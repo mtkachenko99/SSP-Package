@@ -1,0 +1,61 @@
+{
+  "_comment": "C8S3 nanotube predicted without fitting to the aggregate spectrum. Monomer: absorption (Doria 2022) + digitized PL (Kuevda 2025) -> E0, bath, sigma. Structure/F/n/screening: Megow et al. 2015; mu 11.4 D (Eisele 2012).",
+  "output_dir": "../../results/c8s3_tube_v2/extended_dipole",
+  "configurations": [
+    {
+      "name": "extended_dipole",
+      "geometry_type": "brickwork_tube",
+      "geometry_params": {}
+    }
+  ],
+  "exciton": {
+    "monomer_energy_cm": 19906.5,
+    "transition_dipole_D": 11.4,
+    "disorder_sigma_cm": 124.5,
+    "n_medium": 1.33,
+    "coupling": {
+      "model": "extended_dipole",
+      "dipole_length_nm": 1.0,
+      "screening": 0.32
+    },
+    "dispersion": {
+      "enabled": true,
+      "F_eV": 1.43,
+      "n_aggregate": 1.78,
+      "n_solvent": 1.329,
+      "dipole_length_nm": 1.0,
+      "softening_nm": 0.3
+    }
+  },
+  "bath": {
+    "type": "drude_lorentz",
+    "lambda_cm": 764.0,
+    "cutoff_cm": 572.6,
+    "temperature_K": 295,
+    "modes": [
+      {
+        "omega_cm": 1258.6,
+        "huang_rhys": 0.1957,
+        "gamma_cm": 30
+      }
+    ]
+  },
+  "decay": {
+    "monomer_lifetime_ns": 0.0
+  },
+  "spectrum": {
+    "wmin_cm": 14500,
+    "wmax_cm": 21500,
+    "nw": 1400,
+    "t_max_ps": 30
+  },
+  "ensemble": {
+    "min_realizations": 6,
+    "max_realizations": 6,
+    "rel_tolerance": 0.05,
+    "seed": 7
+  },
+  "dynamics": {
+    "enabled": false
+  }
+}

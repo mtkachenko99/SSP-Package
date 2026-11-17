@@ -1,0 +1,30 @@
+{
+  "_comment": "Те же три формы и параметры, что в демо testcalc.ipynb. Связь legacy_J0 воспроизводит J ноутбука; ширины, сдвиг и скорости теперь выводятся из бани.",
+  "output_dir": "results/notebook_demo",
+  "configurations": [
+    {"name": "cylinder", "geometry_type": "cylinder",
+     "geometry_params": {"n_rings": 8, "molecules_per_ring": 10, "radius": 3.8, "pitch": 1.0,
+                         "helical_twist_deg": 18.0, "dipole_tilt_deg": 22.0, "dipole_azimuthal": true}},
+    {"name": "double_wall_tube", "geometry_type": "double_wall_tube",
+     "geometry_params": {"n_rings": 6, "molecules_per_ring_inner": 8, "molecules_per_ring_outer": 10,
+                         "radius_inner": 3.0, "radius_outer": 4.2, "pitch": 1.0, "helical_twist_deg": 18.0,
+                         "wall_offset_deg": 10.0, "dipole_tilt_deg": 22.0, "dipole_azimuthal": true}},
+    {"name": "tube_radial_disorder", "geometry_type": "tube_radial_disorder",
+     "geometry_params": {"n_rings": 8, "molecules_per_ring": 10, "radius": 3.8, "radial_sigma": 0.20,
+                         "pitch": 1.0, "helical_twist_deg": 18.0, "dipole_tilt_deg": 22.0,
+                         "dipole_azimuthal": true, "seed": 11}}
+  ],
+  "exciton": {
+    "monomer_energy_cm": 17000.0,
+    "transition_dipole_D": 13.7,
+    "disorder_sigma_cm": 80.0,
+    "n_medium": 1.0,
+    "coupling": {"model": "legacy_J0", "J0_cm": 950.0, "r0_nm": 1.0}
+  },
+  "bath": {"type": "ohmic_exponential", "lambda_cm": 60.0, "cutoff_cm": 250.0, "temperature_K": 300.0},
+  "decay": {"nonradiative_ps": 0.003},
+  "pump": {"type": "oscillator_strength"},
+  "spectrum": {"wmin_cm": 15500.0, "wmax_cm": 18000.0, "nw": 1800, "t_max_ps": 100.0},
+  "ensemble": {"min_realizations": 30, "max_realizations": 600, "rel_tolerance": 0.02, "seed": 1234},
+  "dynamics": {"enabled": true, "t_max_ps": 5.0, "n_times": 200, "initial": "brightest"}
+}

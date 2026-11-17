@@ -1,0 +1,10 @@
+# monomer calibration: cumulant model (Drude + Brownian modes) + static Gaussian broadening
+# errors from (JᵀJ)⁻¹·χ²_ν; chi2_red = 1.905
+name,value,error
+E0_cm,19906.546,7.086
+lambda_cm,763.99227,13.97
+cutoff_cm,572.60681,17.61
+sigma_inh_cm,124.45143,3.406
+mode0_S,0.19566384,0.006575
+mode0_omega_cm,1258.6442,7.072
+stokes_peak_cm (model),608.226,

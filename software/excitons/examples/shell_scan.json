@@ -1,0 +1,71 @@
+{
+  "_comment": "Molecular shell (N molecules, random tangential dipoles) 1.5 nm above a gold nanosphere R = 20 nm in water. The scan moves the exciton across the dipolar plasmon: maps, hybrid maxima, microscopic coupling g (mode × dipoles), peak-based fit with interval and resolution flag, strong-coupling criteria.",
+  "output_dir": "results/shell_scan",
+  "configurations": [
+    {
+      "name": "shell",
+      "geometry_type": "particle_shell",
+      "geometry_params": {
+        "N": 500,
+        "gap": 1.5,
+        "theta_max_deg": 180.0,
+        "dipole_mode": 0,
+        "seed": 1
+      }
+    }
+  ],
+  "exciton": {
+    "monomer_energy_cm": 18900.0,
+    "transition_dipole_D": 12.0,
+    "disorder_sigma_cm": 150.0,
+    "n_medium": 1.33,
+    "coupling": {
+      "model": "point_dipole"
+    }
+  },
+  "bath": {
+    "type": "drude_lorentz",
+    "lambda_cm": 50.0,
+    "cutoff_cm": 120.0,
+    "temperature_K": 300.0
+  },
+  "decay": {
+    "monomer_lifetime_ns": 3.0,
+    "nonradiative_ps": 0.0005
+  },
+  "spectrum": {
+    "wmin_cm": 14000.0,
+    "wmax_cm": 24000.0,
+    "nw": 1200,
+    "t_max_ps": 50.0
+  },
+  "ensemble": {
+    "min_realizations": 16,
+    "max_realizations": 32,
+    "rel_tolerance": 0.03,
+    "seed": 5
+  },
+  "dynamics": {
+    "enabled": false
+  },
+  "nanoparticle": {
+    "enabled": true,
+    "shape": "sphere",
+    "semi_axis_xy_nm": 20.0,
+    "semi_axis_z_nm": 20.0,
+    "material_file": "materials/Au_McPeak.yml",
+    "n_medium": 1.33,
+    "l_max": 110,
+    "realizations": 4,
+    "wmin_cm": 15000.0,
+    "wmax_cm": 23000.0,
+    "nw": 300
+  },
+  "scan": {
+    "enabled": true,
+    "parameter": "exciton.monomer_energy_cm",
+    "from": 16500.0,
+    "to": 21500.0,
+    "steps": 11
+  }
+}

@@ -1,0 +1,13 @@
+# Стартовый набор материалов. Колонки (через TAB):
+# name	cod_formula (Hill, через пробел, как в COD)	jarvis_formula (приведённая)	rii_glob (шаблон пути в refractiveindex.info-database/database/data)
+Au	Au	Au	main/Au/nk/*
+Ag	Ag	Ag	main/Ag/nk/*
+Cu	Cu	Cu	main/Cu/nk/*
+Al	Al	Al	main/Al/nk/*
+Si	Si	Si	main/Si/nk/*
+TiO2	O2 Ti	TiO2	main/TiO2/nk/*
+ZnO	O Zn	ZnO	main/ZnO/nk/*
+CdSe	Cd Se	CdSe	main/CdSe/nk/*
+CdS	Cd S	CdS	main/CdS/nk/*
+CsPbBr3	Br3 Cs Pb	CsPbBr3	other/perovskite/CsPbBr3/nk/*
+SiO2	O2 Si	SiO2	main/SiO2/nk/*
